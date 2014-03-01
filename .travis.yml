@@ -11,3 +11,4 @@ deploy:
   on:
     repo: deiga/Carpenter
     branch: dev
+    node_js: '0.10'
