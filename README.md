@@ -17,6 +17,13 @@ It's an webapp which allows you to input a list of steam nicknames and it will o
 
 ## Technical details
 
+### Requirements
+
+* node
+* npm
+* `npm install -g sails`
+* `npm install -g bower`
+
 ### Database
 
 * Use Firebase for all data storage needs
