@@ -1,0 +1,21 @@
+{
+  "name": "Carpenter",
+  "private": true,
+  "version": "0.0.0",
+  "description": "a Sails application",
+  "dependencies": {
+    "sails": "0.9.9",
+    "grunt": "0.4.1",
+    "sails-disk": "~0.9.0",
+    "optimist": "0.3.4",
+    "jade": "^1.2.0"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "debug": "node debug app.js"
+  },
+  "main": "app.js",
+  "repository": "",
+  "author": "",
+  "license": ""
+}
