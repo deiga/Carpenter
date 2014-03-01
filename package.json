@@ -10,7 +10,8 @@
     "optimist": "0.3.4",
     "jade": "^1.2.0",
     "bower": "^1.2.8",
-    "restler": "^3.2.0"
+    "restler": "^3.2.0",
+    "dotenv": "^0.2.5"
   },
   "scripts": {
     "postinstall": "./node_modules/bower/bin/bower install",
