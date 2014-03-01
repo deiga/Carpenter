@@ -1,9 +1,10 @@
 var rest = require('restler');
+var dotenv = require('dotenv');
 
 Steam = rest.service(function() {
   this.key = process.env.STEAM_API_KEY;
 }, {
-  baseURL: 'api.steampowered.com'
+  baseURL: 'https://api.steampowered.com'
 }, {
   resolveVanityURL: function(vanity_url) {
     var opts = {
@@ -32,12 +33,20 @@ Steam = rest.service(function() {
   }
 });
 
+dotenv.load();
 var client = new Steam();
-
-exports.games = function(steam_identifier) {
-  // figure out if steam_identifier is ID or vanityurl
-  client.resolveVanityURL(steam_identifier).on('complete', function(data) {
-    console.log(data);
-  });
-
+module.exports = {
+  games: function(steam_identifier, callback) {
+    // figure out if steam_identifier is ID or vanityurl
+    client.resolveVanityURL(steam_identifier).on('complete', function(result, res) {
+      console.log(result);
+      if (result.response.success == 42) {
+        callback('Found no match for ' + steam_identifier);
+      } else {
+        client.games(result.response.steamid).on('complete', function(result, res) {
+          callback(result);
+        });
+      }
+    });
+  }
 };
