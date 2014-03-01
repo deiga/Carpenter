@@ -16,7 +16,8 @@
   "scripts": {
     "postinstall": "./node_modules/bower/bin/bower install",
     "start": "node app.js",
-    "debug": "node debug app.js"
+    "debug": "node debug app.js",
+    "test": ""
   },
   "main": "app.js",
   "repository": "",
