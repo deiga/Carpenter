@@ -23,6 +23,7 @@ It's an webapp which allows you to input a list of steam nicknames and it will o
 * npm
 * `npm install -g sails`
 * `npm install -g bower`
+* Run `npm install` for dependencies
 
 ### Database
 
