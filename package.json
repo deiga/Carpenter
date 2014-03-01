@@ -20,7 +20,11 @@
     "test": ""
   },
   "main": "app.js",
-  "repository": "",
-  "author": "",
-  "license": ""
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deiga/Carpenter.git"
+  },
+  "author": "Timo Sand <timo.j.sand@gmail.com>",
+  "contributors": ["Sami Lunnamo", "Joonas Magnússon"],
+  "license": "MIT"
 }
