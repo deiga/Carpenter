@@ -5,7 +5,7 @@ Repo for [NodeJS project](https://github.com/tuhoojabotti/NodeJS-ohjelmointiproj
 
 ## Topic
 
-It's an webapp which allows you to input a list of steam nicknames and it will output the games these people share
+Carpenter is a  webapp which allows you to input a list of steam nicknames and it will output the games these people share
 
 ## Features
 
