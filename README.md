@@ -3,16 +3,16 @@ Carpenter
 
 Repo for [NodeJS project](https://github.com/tuhoojabotti/NodeJS-ohjelmointiprojekti-k2014) at [University of Helsinki](https://www.cs.helsinki.fi/)
 
-## Topic
+## Overview
 
-Carpenter is a  webapp which allows you to input a list of steam nicknames and it will output the games these people share
+Carpenter is a  webapp which allows you to input a list of steam nicknames and outputs the games these people share.  
 
 ## Features
 
-* Input list of Steam nick/id values and show a 'list' of games they have in common
+* Given a list of Steam nicks/ids, show a 'list' of games the users have in common
 * Input steamgroup name and get a 'list' of games the members have in common
-* Login thorugh steam and display groups of friends which have games in common
-* Persist users and add non-steam owned games to users
+* Login through steam and display friends grouped under games you all possess.
+* Persist users and add non-steam-owned games to users
 
 
 ## Technical details
