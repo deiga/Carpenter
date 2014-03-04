@@ -74,14 +74,15 @@ module.exports = {
     var url = 'http://steamcommunity.com';
     if (/\d{3,10}/.test(steam_id)) {
       steam_id = calculateSteamGroupId64(steam_id);
-      url += '/gid/'
+      url += '/gid/';
     } else {
-      url += '/groups/'
+      url += '/groups/';
     }
     url += steam_id + '/memberslistxml/?xml=1';
     console.log(url);
     rest.get(url).on('complete', function(data) {
       parseString(data, function(err, result) {
+        console.log(err, result);
         callback(result.memberList.members[0].steamID64);
       });
     });
