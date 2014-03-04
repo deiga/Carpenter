@@ -71,11 +71,14 @@ module.exports = {
   },
   getGroupMembers: function(steam_id, callback) {
     callback = callback || noop;
-    // http://steamcommunity.com/gid/YYY/memberslistxml/?xml=1
-    if (!/\d{17}/.test(steam_id)) {
+    var url = 'http://steamcommunity.com';
+    if (/\d{3,10}/.test(steam_id)) {
       steam_id = calculateSteamGroupId64(steam_id);
+      url += '/gid/'
+    } else {
+      url += '/groups/'
     }
-    var url = 'http://steamcommunity.com/gid/' + steam_id + '/memberslistxml/?xml=1';
+    url += steam_id + '/memberslistxml/?xml=1';
     console.log(url);
     rest.get(url).on('complete', function(data) {
       parseString(data, function(err, result) {
