@@ -34,6 +34,18 @@ Steam = rest.service(function() {
     };
     return this.get('/IPlayerService/GetOwnedGames/v0001/', opts );
   },
+	gameInfo: function(game_id) {
+		var opts = {
+			query: {
+				key: this.key,
+				appid: game_id,
+			},
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		};
+		return this.get('ISteamUserStats/GetSchemaForGame/v0002/', opts);
+	},
   // http://api.steampowered.com/ISteamUser/GetUserGroupList/v0001?key=XXX&steamid=YYY
 });
 
@@ -47,6 +59,10 @@ function noop(data) {
 function getGames(steam_id, callback) {
   callback = callback || noop;
   client.games(steam_id).on('complete', callback);
+}
+
+function getGameInfo(game_id, callback) {
+	client.gameInfo(game_id).on('complete', callback);
 }
 
 // https://developer.valvesoftware.com/wiki/SteamID#Steam_ID_as_a_Steam_Community_ID
@@ -117,5 +133,11 @@ module.exports = {
         });
         callback(game_ids);
     });
-  }
+  },
+	getGameName: function(game_id, callback) {
+		callback = callback || noop
+		getGameInfo(game_id, function(game_info) {
+			callback(game_info.game.gameName);
+		});
+	}
 };

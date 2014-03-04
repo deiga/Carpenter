@@ -25,8 +25,10 @@ module.exports = {
 	 * get common games of list of users, return as JSON for now
    */
    common: function (req, res) { 
-		var ids = req.params.ids.split(',');
-		SteamService.getCommonGames(ids, function(common_game_ids) { res.json(common_game_ids); });
+		var user_ids = req.params.ids.split(',');
+		SteamService.getCommonGames(user_ids, function(common_game_ids) { 
+			res.json(common_game_ids); 
+		});
   },
 
 
@@ -38,10 +40,6 @@ module.exports = {
    */
    owners: function (req, res) {
     
-    // Send a JSON response
-    return res.json({
-      hello: 'world'
-    });
   },
 
 
