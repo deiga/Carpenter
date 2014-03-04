@@ -96,6 +96,11 @@ module.exports.routes = {
  'get /groups/games/:id': {
     controller: 'groups',
     action: 'games'
+ },
+
+ 'get /game/common/:ids': {
+  	controller: 'game',
+		action: 'common'
  }
 };
 

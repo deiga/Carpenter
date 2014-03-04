@@ -21,19 +21,20 @@ module.exports = {
   /**
    * Action blueprints:
    *    `/game/common`
+	 * 
+	 * get common games of list of users, return as JSON for now
    */
-   common: function (req, res) {
-    
-    // Send a JSON response
-    return res.json({
-      hello: 'world'
-    });
+   common: function (req, res) { 
+		var ids = req.params.ids.split(',');
+		SteamService.getCommonGames(ids, function(common_game_ids) { res.json(common_game_ids); });
   },
 
 
   /**
    * Action blueprints:
    *    `/game/owners`
+	 *
+	 * Get owners of requested game 
    */
    owners: function (req, res) {
     
