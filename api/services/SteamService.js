@@ -95,6 +95,7 @@ function populateGamesHash(userList, callback) {
 
 module.exports = {
   games: function(steam_id, callback) {
+    console.log('Games');
     callback = callback || noop;
     if (/\d{17}/.test(steam_id)) {
       getGames(steam_id, callback);
@@ -110,6 +111,7 @@ module.exports = {
     }
   },
   getGroupMembers: function(steam_id, callback) {
+    console.log('GetGroupMembers');
     callback = callback || noop;
     var url = 'http://steamcommunity.com';
     if (/\d{3,10}/.test(steam_id)) {
@@ -119,21 +121,25 @@ module.exports = {
       url += '/groups/';
     }
     url += steam_id + '/memberslistxml/?xml=1';
-    console.log(url);
     rest.get(url).on('complete', function(data) {
       parseString(data, function(err, result) {
-        console.log(err, result);
+        console.error(err);
+        // console.log(result);
         callback(result.memberList.members[0].steamID64);
       });
     });
   },
-  getCommonGames: function(userList, callback) {
+  getCommonGames: function(userList, limit, callback) {
+    console.log('GetCommonGames');
     callback = callback || noop;
+    limit = typeof limit !== 'undefined' ? limit : userList.length;
     populateGamesHash(userList, function() {
       var game_ids = [];
       gamesHash.forEach(function(user_ids, game_id) {
-          if (userList.length == user_ids.length) {
-            game_ids.push(game_id)
+        console.log(user_ids.length, userList.length);
+        if (limit == user_ids.length) {
+          console.log('Pushing');
+          game_ids.push(game_id);
         }
       });
       callback(game_ids);
