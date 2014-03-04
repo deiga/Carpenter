@@ -1,5 +1,6 @@
 var rest = require('restler');
 var dotenv = require('dotenv');
+var Long = require('Long');
 
 Steam = rest.service(function() {
   this.key = process.env.STEAM_API_KEY;
@@ -31,6 +32,8 @@ Steam = rest.service(function() {
     };
     return this.get('/IPlayerService/GetOwnedGames/v0001/', opts );
   }
+  // http://api.steampowered.com/ISteamUser/GetUserGroupList/v0001?key=XXX&steamid=YYY
+  // http://steamcommunity.com/gid/YYY/memberslistxml/?xml=1
 });
 
 dotenv.load();
@@ -43,6 +46,11 @@ function noop(data) {
 function getGames(steam_id, callback) {
   callback = callback || noop;
   client.games(steam_id).on('complete', callback);
+}
+
+// https://developer.valvesoftware.com/wiki/SteamID#Steam_ID_as_a_Steam_Community_ID
+function calculateSteamGroupId64(steam_group_id32) {
+  return Long.ONE.shiftLeft(56).or(new Long(7).shiftLeft(52)).or(steam_group_id32).toString();
 }
 
 module.exports = {
