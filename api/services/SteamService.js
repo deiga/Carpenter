@@ -35,18 +35,30 @@ Steam = rest.service(function() {
 
 dotenv.load();
 var client = new Steam();
+
+function noop(data) {
+  console.log(data);
+}
+
+function getGames(steam_id, callback) {
+  callback = callback || noop;
+  client.games(steam_id).on('complete', callback);
+}
+
 module.exports = {
   games: function(steam_identifier, callback) {
-    // figure out if steam_identifier is ID or vanityurl
-    client.resolveVanityURL(steam_identifier).on('complete', function(result, res) {
-      console.log(result);
-      if (result.response.success == 42) {
-        callback('Found no match for ' + steam_identifier);
-      } else {
-        client.games(result.response.steamid).on('complete', function(result, res) {
-          callback(result);
-        });
-      }
-    });
+    callback = callback || noop;
+    if (/\d{17}/.test(steam_identifier)) {
+      getGames(steam_identifier, callback);
+    } else {
+      client.resolveVanityURL(steam_identifier).on('complete', function(result, res) {
+        console.log(result);
+        if (result.response.success == 42) {
+          callback('Found no match for ' + steam_identifier);
+        } else {
+          getGames(result.response.steamid, callback);
+        }
+      });
+    }
   }
 };
