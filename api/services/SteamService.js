@@ -1,6 +1,7 @@
 var rest = require('restler');
 var dotenv = require('dotenv');
 var Long = require('Long');
+var parseString = require('xml2js').parseString;
 
 Steam = rest.service(function() {
   this.key = process.env.STEAM_API_KEY;
@@ -31,9 +32,8 @@ Steam = rest.service(function() {
       }
     };
     return this.get('/IPlayerService/GetOwnedGames/v0001/', opts );
-  }
+  },
   // http://api.steampowered.com/ISteamUser/GetUserGroupList/v0001?key=XXX&steamid=YYY
-  // http://steamcommunity.com/gid/YYY/memberslistxml/?xml=1
 });
 
 dotenv.load();
@@ -50,23 +50,37 @@ function getGames(steam_id, callback) {
 
 // https://developer.valvesoftware.com/wiki/SteamID#Steam_ID_as_a_Steam_Community_ID
 function calculateSteamGroupId64(steam_group_id32) {
-  return Long.ONE.shiftLeft(56).or(new Long(7).shiftLeft(52)).or(steam_group_id32).toString();
+  return Long.ONE.shiftLeft(56).or(new Long(7).shiftLeft(52)).or(new Long(steam_group_id32)).toString();
 }
 
 module.exports = {
-  games: function(steam_identifier, callback) {
+  games: function(steam_id, callback) {
     callback = callback || noop;
-    if (/\d{17}/.test(steam_identifier)) {
-      getGames(steam_identifier, callback);
+    if (/\d{17}/.test(steam_id)) {
+      getGames(steam_id, callback);
     } else {
-      client.resolveVanityURL(steam_identifier).on('complete', function(result, res) {
+      client.resolveVanityURL(steam_id).on('complete', function(result, res) {
         console.log(result);
         if (result.response.success == 42) {
-          callback('Found no match for ' + steam_identifier);
+          callback('Found no match for ' + steam_id);
         } else {
           getGames(result.response.steamid, callback);
         }
       });
     }
+  },
+  getGroupMembers: function(steam_id, callback) {
+    callback = callback || noop;
+    // http://steamcommunity.com/gid/YYY/memberslistxml/?xml=1
+    if (!/\d{17}/.test(steam_id)) {
+      steam_id = calculateSteamGroupId64(steam_id);
+    }
+    var url = 'http://steamcommunity.com/gid/' + steam_id + '/memberslistxml/?xml=1';
+    console.log(url);
+    rest.get(url).on('complete', function(data) {
+      parseString(data, function(err, result) {
+        callback(result.memberList.members[0].steamID64);
+      });
+    });
   }
 };
