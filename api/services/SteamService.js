@@ -3,6 +3,7 @@ var dotenv = require('dotenv');
 var Long = require('long');
 var parseString = require('xml2js').parseString;
 var HashMap = require('hashmap').HashMap;
+var after = require('after');
 
 Steam = rest.service(function() {
   this.key = process.env.STEAM_API_KEY;
@@ -57,7 +58,6 @@ function noop(data) {
 }
 
 function getGames(steam_id, callback) {
-  callback = callback || noop;
   client.games(steam_id).on('complete', callback);
 }
 
@@ -73,19 +73,24 @@ function calculateSteamGroupId64(steam_group_id32) {
 var gamesHash = new HashMap();
 
 function populateGamesHash(userList, callback) {
-  userList.forEach(function(user) {
+  console.log('PopulateGameHash');
+  callback = callback || noop;
 
+  var next = after(userList.length, callback);
+  userList.forEach(function(user) {
     SteamService.games(user, function(data){
-      data.response.games.forEach(function(game) {
-        var user_ids = gamesHash.get(game.appid) || [];
-        if (user_ids.indexOf(user) == -1) {
-          user_ids.push(user);
-        }
-        gamesHash.set(game.appid, user_ids);
-      });
+      if (Object.getOwnPropertyNames(data.response).length > 0) {
+        data.response.games.forEach(function(game) {
+          var user_ids = gamesHash.get(game.appid) || [];
+          if (user_ids.indexOf(user) == -1) {
+            user_ids.push(user);
+          }
+          gamesHash.set(game.appid, user_ids);
+        });
+      }
+      next();
     });
   });
-  setTimeout(callback, 3000 * userList.length);
 }
 
 module.exports = {
@@ -126,16 +131,16 @@ module.exports = {
     callback = callback || noop;
     populateGamesHash(userList, function() {
       var game_ids = [];
-        gamesHash.forEach(function(user_ids, game_id) {
+      gamesHash.forEach(function(user_ids, game_id) {
           if (userList.length == user_ids.length) {
             game_ids.push(game_id)
-          }
-        });
-        callback(game_ids);
+        }
+      });
+      callback(game_ids);
     });
   },
 	getGameName: function(game_id, callback) {
-		callback = callback || noop
+		callback = callback || noop;
 		getGameInfo(game_id, function(game_info) {
 			callback(game_info.game.gameName);
 		});
