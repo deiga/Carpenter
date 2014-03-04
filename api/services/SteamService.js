@@ -1,7 +1,8 @@
 var rest = require('restler');
 var dotenv = require('dotenv');
-var Long = require('Long');
+var Long = require('long');
 var parseString = require('xml2js').parseString;
+var HashMap = require('hashmap').HashMap;
 
 Steam = rest.service(function() {
   this.key = process.env.STEAM_API_KEY;
@@ -53,6 +54,24 @@ function calculateSteamGroupId64(steam_group_id32) {
   return Long.ONE.shiftLeft(56).or(new Long(7).shiftLeft(52)).or(new Long(steam_group_id32)).toString();
 }
 
+var gamesHash = new HashMap();
+
+function populateGamesHash(userList, callback) {
+  userList.forEach(function(user) {
+
+    SteamService.games(user, function(data){
+      data.response.games.forEach(function(game) {
+        var user_ids = gamesHash.get(game.appid) || [];
+        if (user_ids.indexOf(user) == -1) {
+          user_ids.push(user);
+        }
+        gamesHash.set(game.appid, user_ids);
+      });
+    });
+  });
+  setTimeout(callback, 3000 * userList.length);
+}
+
 module.exports = {
   games: function(steam_id, callback) {
     callback = callback || noop;
@@ -85,6 +104,18 @@ module.exports = {
         console.log(err, result);
         callback(result.memberList.members[0].steamID64);
       });
+    });
+  },
+  getCommonGames: function(userList, callback) {
+    callback = callback || noop;
+    populateGamesHash(userList, function() {
+      var game_ids = [];
+        gamesHash.forEach(function(user_ids, game_id) {
+          if (userList.length == user_ids.length) {
+            game_ids.push(game_id)
+          }
+        });
+        callback(game_ids);
     });
   }
 };
