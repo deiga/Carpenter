@@ -101,7 +101,14 @@ module.exports.routes = {
  'get /game/common/:ids': {
   	controller: 'game',
 		action: 'common'
+ },
+ 'get /game': {
+    view: 'home/game'
+ },
+ 'get /login': {
+    view: 'home/login'
  }
+
 };
 
 
