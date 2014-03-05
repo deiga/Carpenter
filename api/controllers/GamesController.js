@@ -1,3 +1,5 @@
+var after = require('after');
+
 /**
  * GamesController
  *
@@ -15,7 +17,7 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
-module.exports = {
+ module.exports = {
 
 
   /**
@@ -23,8 +25,8 @@ module.exports = {
    *    `/games/common`
 	 *
 	 * get common games of list of users, return as JSON for now
-   */
-   common: function (req, res) {
+  */
+  common: function (req, res) {
     if (typeof req.params.ids === 'undefined') {
       var user_ids = [];
       req.query.users.split(',').forEach(function(user_id) {
@@ -34,9 +36,9 @@ module.exports = {
     else {
       var user_ids = req.params.ids.split(',');
     }
-		SteamService.getCommonGames(user_ids, function(common_game_ids) {
-			res.json(common_game_ids);
-		});
+    SteamService.getCommonGames(user_ids, function(common_game_ids) {
+     res.json(common_game_ids);
+   });
   },
 
 
@@ -45,8 +47,8 @@ module.exports = {
    *    `/games/owners`
 	 *
 	 * Get owners of requested game
-   */
-   owners: function (req, res) {
+  */
+  owners: function (req, res) {
 
   },
 
@@ -55,8 +57,18 @@ module.exports = {
     console.log('Group ID: ' + group_id);
     SteamService.getGroupMembers(group_id, function(user_ids) {
       SteamService.getCommonGames(user_ids, 4, function(games) {
-        res.json(games);
-        console.log('All done!');
+        var game_names = [];
+        var next = after(games.length, finish);
+        games.forEach(function(game_id) {
+          Game.findOne({appid: game_id.toString()}, function(err, game) {
+            game_names.push(game.name);
+            next(null, game_names);
+          });
+        });
+        function finish(err, game_names) {
+          res.json(game_names);
+          console.log('All done!');
+        }
       });
     });
   },
@@ -68,7 +80,7 @@ module.exports = {
    * Overrides for the settings in `config/controllers.js`
    * (specific to GamesController)
    */
-  _config: {}
+   _config: {}
 
 
-};
+ };
