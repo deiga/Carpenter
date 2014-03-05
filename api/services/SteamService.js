@@ -101,7 +101,6 @@ module.exports = {
       getGames(steam_id, callback);
     } else {
       client.resolveVanityURL(steam_id).on('complete', function(result, res) {
-        console.log(result);
         if (result.response.success == 42) {
           callback('Found no match for ' + steam_id);
         } else {
@@ -132,13 +131,15 @@ module.exports = {
   getCommonGames: function(userList, limit, callback) {
     console.log('GetCommonGames');
     callback = callback || noop;
+    if (typeof limit === 'function') {
+      callback = limit;
+      limit = userList.length;
+    }
     limit = typeof limit !== 'undefined' ? limit : userList.length;
     populateGamesHash(userList, function() {
       var game_ids = [];
       gamesHash.forEach(function(user_ids, game_id) {
-        console.log(user_ids.length, userList.length);
         if (limit == user_ids.length) {
-          console.log('Pushing');
           game_ids.push(game_id);
         }
       });
