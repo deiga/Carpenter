@@ -26,7 +26,10 @@ module.exports = {
    */
    common: function (req, res) {
     if (typeof req.params.ids === 'undefined') { 
-      var user_ids = req.query.users.split(', ');
+      var user_ids = [];
+      req.query.users.split(',').forEach(function(user_id) {
+        user_ids.push(user_id.trim());
+      });
     }
     else {
       var user_ids = req.params.ids.split(',');
