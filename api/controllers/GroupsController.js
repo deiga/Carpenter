@@ -18,6 +18,7 @@ module.exports = {
     SteamService.getGroupMembers(group_id, function(user_ids) {
       SteamService.getCommonGames(user_ids, 4, function(games) {
         res.json(games);
+        console.log('All done!');
       });
     });
   }
