@@ -93,17 +93,10 @@ module.exports.routes = {
   'get /*(^.*)': 'UserController.profile'
 
   */
- 'get /groups/games/:id': {
-    controller: 'groups',
-    action: 'games'
- },
-
- 'get /game/common/:ids': {
-  	controller: 'game',
-		action: 'common'
- },
- 'get /game': {
-    view: 'home/game'
+ 'get /games/group/:id': 'games.group',
+ 'get /games/common/:ids': 'games.common',
+ 'get /games': {
+    view: 'home/games'
  },
  'get /login': {
     view: 'home/login'

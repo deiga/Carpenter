@@ -1,5 +1,5 @@
 /**
- * GameController
+ * GamesController
  *
  * @module      :: Controller
  * @description	:: A set of functions called `actions`.
@@ -16,16 +16,16 @@
  */
 
 module.exports = {
-    
-  
+
+
   /**
    * Action blueprints:
-   *    `/game/common`
-	 * 
+   *    `/games/common`
+	 *
 	 * get common games of list of users, return as JSON for now
    */
    common: function (req, res) {
-    if (typeof req.params.ids === 'undefined') { 
+    if (typeof req.params.ids === 'undefined') {
       var user_ids = [];
       req.query.users.split(',').forEach(function(user_id) {
         user_ids.push(user_id.trim());
@@ -34,20 +34,31 @@ module.exports = {
     else {
       var user_ids = req.params.ids.split(',');
     }
-		SteamService.getCommonGames(user_ids, function(common_game_ids) { 
-			res.json(common_game_ids); 
+		SteamService.getCommonGames(user_ids, function(common_game_ids) {
+			res.json(common_game_ids);
 		});
   },
 
 
   /**
    * Action blueprints:
-   *    `/game/owners`
+   *    `/games/owners`
 	 *
-	 * Get owners of requested game 
+	 * Get owners of requested game
    */
    owners: function (req, res) {
-    
+
+  },
+
+  group: function (req, res) {
+    var group_id = req.params.id;
+    console.log('Group ID: ' + group_id);
+    SteamService.getGroupMembers(group_id, function(user_ids) {
+      SteamService.getCommonGames(user_ids, 4, function(games) {
+        res.json(games);
+        console.log('All done!');
+      });
+    });
   },
 
 
@@ -55,9 +66,9 @@ module.exports = {
 
   /**
    * Overrides for the settings in `config/controllers.js`
-   * (specific to GameController)
+   * (specific to GamesController)
    */
   _config: {}
 
-  
+
 };
