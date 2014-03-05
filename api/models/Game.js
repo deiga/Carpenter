@@ -7,6 +7,8 @@
 
 module.exports = {
 
+  schema: true,
+
 	attributes: {
     appid: {
       type: 'STRING',

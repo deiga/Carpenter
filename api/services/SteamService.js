@@ -54,7 +54,7 @@ dotenv.load();
 var client = new Steam();
 
 function noop(data) {
-  console.log(data);
+  console.log("NOOP", data);
 }
 
 function getGames(steam_id, callback) {
@@ -73,20 +73,25 @@ function calculateSteamGroupId64(steam_group_id32) {
 var gamesHash = new HashMap();
 
 function populateGamesHash(userList, callback) {
-  console.log('PopulateGameHash');
   callback = callback || noop;
 
   var next = after(userList.length, callback);
   userList.forEach(function(user) {
     SteamService.games(user, function(data){
       if (typeof data.response === 'undefined') {
-        console.log(data);
+        console.log("Response undefined", data);
       }
       if (typeof data.response !== 'undefined' &&  Object.getOwnPropertyNames(data.response).length > 0) {
         data.response.games.forEach(function(game) {
-          Game.findOrCreate(game).done(function(err) {
+          delete game.playtime_forever;
+          delete game.has_community_visible_stats;
+          Game.findOrCreate(game, game).done(function(err, created) {
             if (err) {
               console.error("Error while saving game: ", game, err);
+            } else {
+              if (typeof created === 'undefined') {
+                console.log("whats wrong with this game?", game);
+              }
             }
           });
           var user_ids = gamesHash.get(game.appid) || [];
@@ -117,7 +122,6 @@ module.exports = {
     }
   },
   getGroupMembers: function(steam_id, callback) {
-    console.log('GetGroupMembers');
     callback = callback || noop;
     var url = 'http://steamcommunity.com';
     if (/\d{3,10}/.test(steam_id)) {
@@ -129,14 +133,12 @@ module.exports = {
     url += steam_id + '/memberslistxml/?xml=1';
     rest.get(url).on('complete', function(data) {
       parseString(data, function(err, result) {
-        console.error(err);
-        // console.log(result);
+        console.error("Error while parsing xml", err);
         callback(result.memberList.members[0].steamID64);
       });
     });
   },
   getCommonGames: function(userList, limit, callback) {
-    console.log('GetCommonGames');
     callback = callback || noop;
     if (typeof limit === 'function') {
       callback = limit;
