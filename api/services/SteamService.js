@@ -89,7 +89,7 @@ function populateGamesHash(userList, callback) {
             if (err) {
               console.error("Error while saving game: ", game, err);
             } else {
-              if (typeof created === 'undefined') {
+              if (typeof created === 'undefined' && Game.adapter.identity !== 'sails-mongo') {
                 console.log("whats wrong with this game?", game);
               }
             }
@@ -133,7 +133,7 @@ module.exports = {
     url += steam_id + '/memberslistxml/?xml=1';
     rest.get(url).on('complete', function(data) {
       parseString(data, function(err, result) {
-        console.error("Error while parsing xml", err);
+        if (err) console.error("Error while parsing xml", err);
         callback(result.memberList.members[0].steamID64);
       });
     });
