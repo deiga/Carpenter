@@ -27,14 +27,14 @@ var after = require('after');
 	 * get common games of list of users, return as JSON for now
   */
   common: function (req, res) {
+    var user_ids = [];
     if (typeof req.params.ids === 'undefined') {
-      var user_ids = [];
       req.query.users.split(',').forEach(function(user_id) {
         user_ids.push(user_id.trim());
       });
     }
     else {
-      var user_ids = req.params.ids.split(',');
+      user_ids = req.params.ids.split(',');
     }
     SteamService.getCommonGames(user_ids, function(common_game_ids) {
      res.json(common_game_ids);
