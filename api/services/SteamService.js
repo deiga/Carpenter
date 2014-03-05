@@ -79,8 +79,16 @@ function populateGamesHash(userList, callback) {
   var next = after(userList.length, callback);
   userList.forEach(function(user) {
     SteamService.games(user, function(data){
-      if (Object.getOwnPropertyNames(data.response).length > 0) {
+      if (typeof data.response === 'undefined') {
+        console.log(data);
+      }
+      if (typeof data.response !== 'undefined' &&  Object.getOwnPropertyNames(data.response).length > 0) {
         data.response.games.forEach(function(game) {
+          Game.findOrCreate(game).done(function(err) {
+            if (err) {
+              console.error("Error while saving game: ", game, err);
+            }
+          });
           var user_ids = gamesHash.get(game.appid) || [];
           if (user_ids.indexOf(user) == -1) {
             user_ids.push(user);
@@ -95,7 +103,6 @@ function populateGamesHash(userList, callback) {
 
 module.exports = {
   games: function(steam_id, callback) {
-    console.log('Games');
     callback = callback || noop;
     if (/\d{17}/.test(steam_id)) {
       getGames(steam_id, callback);
