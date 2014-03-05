@@ -11,7 +11,7 @@ module.exports = {
 	schema: true,
 
 	attributes: {
-   i d: {
+   	id: {
       type: 'STRING',
       required: true,
       unique: true
@@ -20,10 +20,14 @@ module.exports = {
       type: 'STRING',
       required: true
     },
-
+    //I have no idea how these should work!
+    friends: {
+      collection: 'User'
+	}
+	games: {
+		collection: 'Game'
 	}
 
-    
   }
 
 };
