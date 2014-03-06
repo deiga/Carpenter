@@ -11,7 +11,7 @@ module.exports = {
 	schema: true,
 
 	attributes: {
-   	id: {
+    id: {
       type: 'STRING',
       required: true,
       unique: true
@@ -19,15 +19,25 @@ module.exports = {
     name: {
       type: 'STRING',
       required: true
+      unique: true
+    },
+    steam_nick: {
+      type: 'STRING',
+      required: false
+      unique: true
+    },
+    steam_id: {
+      type: 'STRING',
+      required: false
+      unique: true
     },
     //I have no idea how these should work!
     friends: {
       collection: 'User'
-	}
+	},
 	games: {
-		collection: 'Game'
+	  collection: 'Game'
 	}
-
   }
 
 };
