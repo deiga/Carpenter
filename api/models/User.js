@@ -11,7 +11,7 @@ module.exports = {
 	schema: true,
 
 	attributes: {
-   i d: {
+   id: {
       type: 'STRING',
       required: true,
       unique: true
