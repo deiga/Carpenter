@@ -11,27 +11,16 @@
    schema: true,
 
    attributes: {
-    id: {
-      type: 'INTEGER',
-      required: true,
-      unique: true
-    },
-    name: {
-      type: 'STRING',
-      required: true,
-      unique: true
-    },
     steam_nick: {
       type: 'STRING',
-      required: false,
+      required: true,
       unique: true
     },
     steam_id: {
       type: 'STRING',
-      required: false,
+      required: true,
       unique: true
     },
-    //I have no idea how these should work!
     friends: {
       type: 'ARRAY'
     },
