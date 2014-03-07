@@ -30,6 +30,7 @@ module.exports = {
   SteamService.player(user_id, function(user_name) {
     User.findOrCreate({steam_id: user_id}, {steam_id: user_id, steam_nick: user_name}, function(error, user) {
       console.log(user);  
+      req.session.user = user.steam_id;
       res.redirect('/users/' + user_id);
     });
   });
@@ -38,6 +39,7 @@ module.exports = {
  login: function (req, res) {
   relyingPart.authenticate('http://steamcommunity.com/openid', false, function(error, authUrl) {
     if (error) {
+    	if (req.session.user) req.session.user = null;
       res.writeHead(200);
       res.end('Authentication failed: ' + error.message);
     }
