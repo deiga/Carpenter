@@ -162,14 +162,14 @@ SteamService.getGroupMembers = function(steam_id, callback) {
     url += '/groups/';
   }
   url += steam_id + '/memberslistxml/?xml=1';
-  rest.get(url).on('complete', parseMemberList.bind(null, callback));
+  re.try(getMemberList.bind(null, url), callback);
 };
 
-function parseMemberList(cb, data) {
-  re.try(parseXML.bind(null, data), cb);
+function getMemberList(url, retryCount, cb) {
+  rest.get(url).on('complete', parseMemberList.bind(null, cb));
 }
 
-function parseXML(data, retryCount, done) {
+function parseMemberList(done, data) {
   parseString(data, function(err, result) {
     if (err) {
       console.error("Error while parsing xml, retrying");
