@@ -64,6 +64,7 @@ function listGames(res, game_ids) {
 }
 
 function finish(res, err, games) {
+  var names = res.req.query.users || res.req.query.group_name;
   console.log(res.req.query.users);
   games.sort(function(a, b) {
     if (a.name > b.name) {
@@ -74,7 +75,7 @@ function finish(res, err, games) {
     }
     return 0
   });
-  res.view('games/common', { games: games, names: res.req.query.users } );
+  res.view('games/common', { games: games, names: names } );
   console.log('All done!');
 }
 
