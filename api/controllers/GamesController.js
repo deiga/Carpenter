@@ -70,12 +70,13 @@ var after = require('after');
         var game_names = [];
         var next = after(games.length, finish);
         games.forEach(function(game_id) {
-          Game.findOne({appid: game_id.toString()}, function(err, game) {
+          SteamService.getGame(game_id, function(game) {
             game_names.push(game.name);
             next(null, game_names);
           });
         });
       });
+
       function finish(err, game_names) {
         res.json(game_names);
         console.log('All done!');
