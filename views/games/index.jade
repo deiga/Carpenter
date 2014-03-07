@@ -6,12 +6,12 @@ block body
   p
     |Input all users delimited with comma, e.g. "Taxus, deiga, ..."
     br
-    form(action="/games/common/" method="get")
+    form.pure-form(action="/games/common/" method="get")
       input(type='text', name='users')
       input(type='submit', value='Search')
   p
     |Input steam group name
     br
-    form(action="/games/group/" method="get")
+    form.pure-form(action="/games/group/" method="get")
       input(type='text', name='group_name')
       input(type='submit', value='Search')
