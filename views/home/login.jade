@@ -5,5 +5,5 @@ block body
     |Give your Steam ID to get profile and friend information
     br
     form(action='/users/login' method='get')
-      input(type='text', name='openid_identifier')
-      input(type='submit', value='login')
+      a(href="/users/login")
+        img(src="http://cdn.steamcommunity.com/public/images/signinthroughsteam/sits_small.png")
