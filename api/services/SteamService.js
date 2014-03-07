@@ -4,6 +4,8 @@ var Long = require('long');
 var parseString = require('xml2js').parseString;
 var HashMap = require('hashmap').HashMap;
 var after = require('after');
+var Re = require('re'),
+re = new Re();
 
 Steam = rest.service(function() {
   this.key = process.env.STEAM_API_KEY;
@@ -35,18 +37,18 @@ Steam = rest.service(function() {
     };
     return this.get('/IPlayerService/GetOwnedGames/v0001/', opts );
   },
-	gameInfo: function(game_id) {
-		var opts = {
-			query: {
-				key: this.key,
-				appid: game_id,
-			},
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		};
-		return this.get('ISteamUserStats/GetSchemaForGame/v0002/', opts);
-	},
+  gameInfo: function(game_id) {
+    var opts = {
+     query: {
+      key: this.key,
+      appid: game_id,
+    },
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+  return this.get('ISteamUserStats/GetSchemaForGame/v0002/', opts);
+},
   // http://api.steampowered.com/ISteamUser/GetUserGroupList/v0001?key=XXX&steamid=YYY
 });
 
@@ -103,62 +105,74 @@ function populateGamesHash(userList, callback) {
       }
       next();
     });
-  });
+});
 }
 
-module.exports = {
-  games: function(steam_id, callback) {
-    callback = callback || noop;
-    if (/\d{17}/.test(steam_id)) {
-      getGames(steam_id, callback);
-    } else {
-      client.resolveVanityURL(steam_id).on('complete', function(result, res) {
-        if (result.response.success == 42) {
-          callback('Found no match for ' + steam_id);
-        } else {
-          getGames(result.response.steamid, callback);
-        }
-      });
-    }
-  },
-  getGroupMembers: function(steam_id, callback) {
-    callback = callback || noop;
-    var url = 'http://steamcommunity.com';
-    if (/\d{3,10}/.test(steam_id)) {
-      steam_id = calculateSteamGroupId64(steam_id);
-      url += '/gid/';
-    } else {
-      url += '/groups/';
-    }
-    url += steam_id + '/memberslistxml/?xml=1';
-    rest.get(url).on('complete', function(data) {
-      parseString(data, function(err, result) {
-        if (err) console.error("Error while parsing xml", err);
-        callback(result.memberList.members[0].steamID64);
-      });
+var SteamService = {};
+
+SteamService.games = function(steam_id, callback) {
+  callback = callback || noop;
+  if (/\d{17}/.test(steam_id)) {
+    getGames(steam_id, callback);
+  } else {
+    client.resolveVanityURL(steam_id).on('complete', function(result, res) {
+      if (result.response.success == 42) {
+        callback('Found no match for ' + steam_id);
+      } else {
+        getGames(result.response.steamid, callback);
+      }
     });
-  },
-  getCommonGames: function(userList, limit, callback) {
-    callback = callback || noop;
-    if (typeof limit === 'function') {
-      callback = limit;
-      limit = userList.length;
-    }
-    limit = typeof limit !== 'undefined' ? limit : userList.length;
-    populateGamesHash(userList, function() {
-      var game_ids = [];
-      gamesHash.forEach(function(user_ids, game_id) {
-        if (limit == user_ids.length) {
-          game_ids.push(game_id);
-        }
-      });
-      callback(game_ids);
-    });
-  },
-	getGameName: function(game_id, callback) {
-		callback = callback || noop;
-		getGameInfo(game_id, function(game_info) {
-			callback(game_info.game.gameName);
-		});
-	}
+  }
 };
+
+SteamService.getGroupMembers = function(steam_id, callback) {
+  callback = callback || noop;
+  var url = 'http://steamcommunity.com';
+  if (/\d{3,10}/.test(steam_id)) {
+    steam_id = calculateSteamGroupId64(steam_id);
+    url += '/gid/';
+  } else {
+    url += '/groups/';
+  }
+  url += steam_id + '/memberslistxml/?xml=1';
+  rest.get(url).on('complete', function(data) {
+    re.try(function parseXML(retryCount, done) {
+      parseString(data, function(err, result) {
+        if (err) {
+          console.error("Error while parsing xml", err);
+          done(err);
+        } else {
+          done(err, result.memberList.members[0].steamID64);
+        }
+      });
+    }, callback);
+  });
+};
+
+SteamService.getCommonGames = function(userList, limit, callback) {
+  callback = callback || noop;
+  if (typeof limit === 'function') {
+    callback = limit;
+    limit = userList.length;
+  }
+  limit = typeof limit !== 'undefined' ? limit : userList.length;
+  populateGamesHash(userList, function() {
+    var game_ids = [];
+    gamesHash.forEach(function(user_ids, game_id) {
+      if (limit == user_ids.length) {
+        game_ids.push(game_id);
+      }
+    });
+    callback(game_ids);
+  });
+};
+
+SteamService.getGame = function(game_id, callback) {
+  callback = callback || noop;
+  Game.findOne({appid: game_id.toString()}, function(err, game) {
+    callback(game);
+  });
+};
+
+module.exports = SteamService;
+
