@@ -33,7 +33,7 @@ Steam = rest.service(function() {
       headers: {
         'Content-Type': 'application/json'
       }
-    }
+    };
     return this.get('/ISteamUser/GetPlayerSummaries/v0002/', opts);
   },
   games: function(steam_id) {
@@ -73,10 +73,6 @@ function noop(data) {
 
 function getGames(steam_id, callback) {
   client.games(steam_id).on('complete', callback);
-}
-
-function getGameInfo(game_id, callback) {
-	client.gameInfo(game_id).on('complete', callback);
 }
 
 function getPlayerSummary(user_id, callback) {
@@ -146,13 +142,13 @@ SteamService.player = function(user_id, callback) {
       callback(result.response.players[0].personaname);
   });
 };
+
 function getGamesForResolvedVanityURL(callback, result) {
   if (result.response.success == 42) {
     callback('Found no match for ' + steam_id);
   } else {
     getGames(result.response.steamid, callback);
   }
-
 }
 
 SteamService.getGroupMembers = function(steam_id, callback) {
@@ -165,17 +161,17 @@ SteamService.getGroupMembers = function(steam_id, callback) {
     url += '/groups/';
   }
   url += steam_id + '/memberslistxml/?xml=1';
-  rest.get(url).on('complete', parseMemberList.bind(null, callback));
+  re.try(getMemberList.bind(null, url), callback);
 };
 
-function parseMemberList(cb, data) {
-  re.try(parseXML.bind(null, data), cb);
+function getMemberList(url, retryCount, cb) {
+  rest.get(url).on('complete', parseMemberList.bind(null, cb));
 }
 
-function parseXML(data, retryCount, done) {
+function parseMemberList(done, data) {
   parseString(data, function(err, result) {
     if (err) {
-      console.error("Error while parsing xml", err);
+      console.error("Error while parsing xml, retrying");
       done(err);
     } else {
       done(err, result.memberList.members[0].steamID64);
