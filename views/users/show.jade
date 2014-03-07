@@ -1,7 +1,7 @@
 extend ../layout
 
 block body
-  h1 Page of !{user.name}
+  h1 Page of !{user.steam_id}
   
-  - for (var x = 0; x < user.games.length-1; x++)
-  li !{user.games[x].name}
+  - for (var x = 0; x < user.games.length-1; x++) // or something
+  li //TODO display game name, uri to steam page
