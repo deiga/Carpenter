@@ -6,11 +6,11 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
-module.exports = {
+ module.exports = {
 
-	schema: true,
+   schema: true,
 
-	attributes: {
+   attributes: {
     id: {
       type: 'STRING',
       required: true,
@@ -18,26 +18,26 @@ module.exports = {
     },
     name: {
       type: 'STRING',
-      required: true
+      required: true,
       unique: true
     },
     steam_nick: {
       type: 'STRING',
-      required: false
+      required: false,
       unique: true
     },
     steam_id: {
       type: 'STRING',
-      required: false
+      required: false,
       unique: true
     },
     //I have no idea how these should work!
     friends: {
       collection: 'User'
-	},
-	games: {
-	  collection: 'Game'
-	}
-  }
+    },
+    games: {
+     collection: 'Game'
+   }
+ }
 
 };
