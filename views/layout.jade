@@ -7,11 +7,48 @@ html
     script(type="text/javascript", src="/linker/js/socket.io.js")
     script(type="text/javascript", src="/linker/js/sails.io.js")
     script(type="text/javascript", src="/linker/js/app.js")
+    script(type="text/javascript", src="/linker/js/carpenter.js")
     // SCRIPTS END
     // STYLES
+    link(rel="stylesheet", href="/linker/bower_components/pure/base-context-min.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/base-context.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/base-min.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/base.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/buttons-core-min.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/buttons-core.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/buttons-min.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/buttons.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/forms-min.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/forms-nr-min.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/forms-nr.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/forms.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/grids-core-min.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/grids-core.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/grids-min.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/grids-nr-min.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/grids-nr.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/grids-units-min.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/grids-units.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/grids.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/menus-core-min.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/menus-core.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/menus-min.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/menus-nr-min.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/menus-nr.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/menus-paginator-min.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/menus-paginator.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/menus.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/pure-min.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/pure-nr-min.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/pure-nr.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/pure.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/tables-min.css")
+    link(rel="stylesheet", href="/linker/bower_components/pure/tables.css")
     link(rel="stylesheet", href="/linker/styles/layout.css")
     // STYLES END
   body
-    include partials/_navigation
-    block body
-    
+    header
+      include partials/_navigation
+    section#contents
+      block body
+

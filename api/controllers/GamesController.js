@@ -53,18 +53,28 @@ function getCommonGames(limit, res, err, user_ids) {
 }
 
 function listGames(res, game_ids) {
-  var game_names = [];
+  var games = [];
   var next = after(game_ids.length, finish.bind(null, res));
   game_ids.forEach(function(game_id) {
     SteamService.getGame(game_id, function(game) {
-       game_names.push(game.name);
-       next(null, game_names);
+       games.push(game);
+       next(null, games);
     });
   });
 }
 
-function finish(res, err, game_names) {
-  res.json(game_names);
+function finish(res, err, games) {
+  console.log(res.req.query.users);
+  games.sort(function(a, b) {
+    if (a.name > b.name) {
+      return 1
+    }
+    if (a.name < b.name) {
+      return -1
+    }
+    return 0
+  });
+  res.view('games/common', { games: games, names: res.req.query.users } );
   console.log('All done!');
 }
 

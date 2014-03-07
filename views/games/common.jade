@@ -1,0 +1,11 @@
+extend ../layout
+
+
+block body
+  h1 Common games for !{names}
+
+  p#gamelist
+    for game in games
+      a(href='http://store.steampowered.com/app/' + game.appid)
+        = game.name
+      br
