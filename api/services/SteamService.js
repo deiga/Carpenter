@@ -4,6 +4,8 @@ var Long = require('long');
 var parseString = require('xml2js').parseString;
 var HashMap = require('hashmap').HashMap;
 var after = require('after');
+var Re = require('re'),
+re = new Re();
 
 Steam = rest.service(function() {
   this.key = process.env.STEAM_API_KEY;
@@ -124,6 +126,7 @@ module.exports = {
   getGroupMembers: function(steam_id, callback) {
     callback = callback || noop;
     var url = 'http://steamcommunity.com';
+    var next = after(1, parse);
     if (/\d{3,10}/.test(steam_id)) {
       steam_id = calculateSteamGroupId64(steam_id);
       url += '/gid/';
@@ -132,11 +135,28 @@ module.exports = {
     }
     url += steam_id + '/memberslistxml/?xml=1';
     rest.get(url).on('complete', function(data) {
-      parseString(data, function(err, result) {
-        if (err) console.error("Error while parsing xml", err);
-        callback(result.memberList.members[0].steamID64);
+      console.log("Got xml data");
+      next(null, data);
       });
+
+    function parse(err, data) {
+      re.try(parseXML, callback);
+      function parseXML(retryCount, done) {
+        var next = after(1, finish);
+        parseString(data, function(err, result) {
+          next(err, result);
     });
+        function finish(err, result) {
+          if (err) {
+            console.error("Error while parsing xml", err);
+            done(err);
+          } else {
+            done(err, result.memberList.members[0].steamID64);
+          }
+        }
+      }
+    }
+
   },
   getCommonGames: function(userList, limit, callback) {
     callback = callback || noop;
