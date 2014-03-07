@@ -28,6 +28,7 @@ var after = require('after');
   */
   common: function (req, res) {
     var user_ids = [];
+    var next = after(1, listGames);
     if (typeof req.params.ids === 'undefined') {
       req.query.users.split(',').forEach(function(user_id) {
         user_ids.push(user_id.trim());
@@ -37,8 +38,12 @@ var after = require('after');
       user_ids = req.params.ids.split(',');
     }
     SteamService.getCommonGames(user_ids, function(common_game_ids) {
-     res.json(common_game_ids);
+     next(null, common_game_ids);
    });
+
+    function listGames(err, game_ids) {
+      res.json(game_ids);
+    }
   },
 
 
@@ -54,8 +59,13 @@ var after = require('after');
 
   group: function (req, res) {
     var group_id = req.params.id;
+    var next = after(1, getCommonGames);
     console.log('Group ID: ' + group_id);
-    SteamService.getGroupMembers(group_id, function(user_ids) {
+    SteamService.getGroupMembers(group_id, function(err, user_ids) {
+      next(err, user_ids);
+    });
+
+    function getCommonGames(err, user_ids) {
       SteamService.getCommonGames(user_ids, 4, function(games) {
         var game_names = [];
         var next = after(games.length, finish);
@@ -65,12 +75,12 @@ var after = require('after');
             next(null, game_names);
           });
         });
-        function finish(err, game_names) {
-          res.json(game_names);
-          console.log('All done!');
-        }
       });
-    });
+      function finish(err, game_names) {
+        res.json(game_names);
+        console.log('All done!');
+      }
+    }
   },
 
 
@@ -81,6 +91,5 @@ var after = require('after');
    * (specific to GamesController)
    */
    _config: {}
-
 
  };
