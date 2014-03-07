@@ -12,7 +12,7 @@
 
    attributes: {
     id: {
-      type: 'STRING',
+      type: 'INTEGER',
       required: true,
       unique: true
     },
@@ -37,7 +37,13 @@
     },
     games: {
      collection: 'Game'
-   }
+   },
+
+   toJSON: function() {
+      var obj = this.toObject();
+      delete obj.password;
+      return obj;
+    }
  }
 
 };

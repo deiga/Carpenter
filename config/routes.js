@@ -97,12 +97,15 @@ module.exports.routes = {
  'get /games/group/:id': 'games.group',
  'get /games/common/:ids': 'games.common',
  'get /games': {
-    view: 'home/games'
+    view: 'games/index'
  },
  'get /login': {
     view: 'home/login'
+ },
+ 'get /users/:id': 'users.show',
+ 'get /users/': {
+    view: 'users/index'
  }
-
 };
 
 
