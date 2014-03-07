@@ -33,7 +33,7 @@ Steam = rest.service(function() {
       headers: {
         'Content-Type': 'application/json'
       }
-    }
+    };
     return this.get('/ISteamUser/GetPlayerSummaries/v0002/', opts);
   },
   games: function(steam_id) {
@@ -73,10 +73,6 @@ function noop(data) {
 
 function getGames(steam_id, callback) {
   client.games(steam_id).on('complete', callback);
-}
-
-function getGameInfo(game_id, callback) {
-	client.gameInfo(game_id).on('complete', callback);
 }
 
 function getPlayerSummary(user_id, callback) {
@@ -176,7 +172,7 @@ function parseMemberList(cb, data) {
 function parseXML(data, retryCount, done) {
   parseString(data, function(err, result) {
     if (err) {
-      console.error("Error while parsing xml", err);
+      console.error("Error while parsing xml, retrying");
       done(err);
     } else {
       done(err, result.memberList.members[0].steamID64);
