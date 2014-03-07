@@ -1,0 +1,11 @@
+extend ../layout
+
+block body
+  h1.
+    Find shared games
+  p
+    |Input all users delimited with comma, e.g. "Taxus, deiga, ..."
+    br
+    form(action="/games/common/" method="get")
+      input(type='text', name='users')
+      input(type='submit', value='Search')
