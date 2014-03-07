@@ -27,9 +27,7 @@ var GamesController = {};
  GamesController.common = function (req, res) {
   var user_ids = [];
   if (typeof req.params.ids === 'undefined') {
-    req.query.users.split(',').forEach(function(user_id) {
-      user_ids.push(user_id.trim());
-    });
+    user_ids = req.query.users.split(',').map(function(id) { return id.trim(); });
   } else {
     user_ids = req.params.ids.split(',');
   }
@@ -48,7 +46,6 @@ GamesController.group = function (req, res) {
 };
 
 function getCommonGames(limit, res, err, user_ids) {
-  console.log(user_ids);
   SteamService.getCommonGames(user_ids, limit, listGames.bind(null, res));
 }
 
