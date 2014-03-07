@@ -120,9 +120,9 @@ function handleGame(user, game) {
 
 function handleGameCreation(error, created_game) {
   if (error) {
-    console.error("Error while saving game: ", game, error);
+    console.error("Error while saving game: ", created_game, error);
   } else if (typeof created === 'undefined' && Game.adapter.identity !== 'sails-mongo') {
-    console.log("whats wrong with this game?", game);
+    console.log("whats wrong with this game?", created_game);
   }
 }
 
@@ -133,7 +133,7 @@ SteamService.games = function(steam_id, callback) {
   if (/\d{17}/.test(steam_id)) {
     getGames(steam_id, callback);
   } else {
-    client.resolveVanityURL(steam_id).on('complete', getGamesForResolvedVanityURL.bind(null, callback));
+    client.resolveVanityURL(steam_id).on('complete', getGamesForResolvedVanityURL.bind(null, steam_id, callback));
   }
 };
 
@@ -143,7 +143,7 @@ SteamService.player = function(user_id, callback) {
   });
 };
 
-function getGamesForResolvedVanityURL(callback, result) {
+function getGamesForResolvedVanityURL(steam_id, callback, result) {
   if (result.response.success == 42) {
     callback('Found no match for ' + steam_id);
   } else {

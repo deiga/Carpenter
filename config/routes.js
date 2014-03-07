@@ -100,9 +100,6 @@ module.exports.routes = {
  'get /games': {
     view: 'games/index'
  },
- 'get /login': {
-    view: 'home/login'
- },
  'get /users/:id': 'users.show',
  'get /users/': {
     view: 'users/index'
