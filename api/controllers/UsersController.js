@@ -51,7 +51,6 @@ module.exports = {
   
 	show: function (req, res) {
 		var user_id = req.params.id;
-		console.log(req.params);
 		User.findOne({ steam_id: user_id }, function(err, user) {
 			if (err) {
 				return res.send(err,500);
@@ -59,15 +58,15 @@ module.exports = {
 			if (!user) {
 				return res.send(404);
 			}
-			//return res.send(user);
-			return res.view({user: user});
+			SteamService.games(user_id, function (result) {
+				console.log(result.response.games);
+				return res.view({user: user, games: result.response.games});
+			});
+			
 		});
 
 	},
 
-	create: function (req, res) {
-		
-	},
 
   /**
    * Overrides for the settings in `config/controllers.js`

@@ -1,17 +1,16 @@
 extend ../layout
 
 block body
-  h1.
-    Find shared games
+  h1 Find shared games
   p
     |Input all users delimited with comma, e.g. "Taxus, deiga, ..."
     br
     form.pure-form(action="/games/common/" method="get")
       input(type='text', name='users')
-      input(type='submit', value='Search')
+      input.pure-button.pure-button-primary(type='submit', value='Search')
   p
     |Input steam group name
     br
     form.pure-form(action="/games/group/" method="get")
       input(type='text', name='group_name')
-      input(type='submit', value='Search')
+      input.pure-button.pure-button-primary(type='submit', value='Search')
