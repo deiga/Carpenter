@@ -33,10 +33,10 @@
     },
     //I have no idea how these should work!
     friends: {
-      collection: 'User'
+      type: 'ARRAY'
     },
     games: {
-     collection: 'Game'
+     type: 'ARRAY'
    },
 
    toJSON: function() {

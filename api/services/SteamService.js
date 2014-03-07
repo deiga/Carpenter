@@ -94,34 +94,40 @@ function populateGamesHash(userList, callback) {
   callback = callback || noop;
 
   var next = after(userList.length, callback);
-  userList.forEach(function(user) {
-    SteamService.games(user, function(data){
-      if (typeof data.response === 'undefined') {
-        console.log("Response undefined", data);
-      }
-      if (typeof data.response !== 'undefined' &&  Object.getOwnPropertyNames(data.response).length > 0) {
-        data.response.games.forEach(function(game) {
-          delete game.playtime_forever;
-          delete game.has_community_visible_stats;
-          Game.findOrCreate(game, game).done(function(err, created) {
-            if (err) {
-              console.error("Error while saving game: ", game, err);
-            } else {
-              if (typeof created === 'undefined' && Game.adapter.identity !== 'sails-mongo') {
-                console.log("whats wrong with this game?", game);
-              }
-            }
-          });
-          var user_ids = gamesHash.get(game.appid) || [];
-          if (user_ids.indexOf(user) == -1) {
-            user_ids.push(user);
-          }
-          gamesHash.set(game.appid, user_ids);
-        });
-      }
-      next();
-    });
-});
+  userList.forEach(insertUsersGames.bind(null, next));
+}
+
+function insertUsersGames(cb, user) {
+  SteamService.games(user, insertGameData.bind(null, user, cb));
+}
+
+function insertGameData(user, next, data) {
+  if (typeof data.response === 'undefined') {
+    console.log("Response undefined", data);
+  }
+  if (typeof data.response !== 'undefined' &&  Object.getOwnPropertyNames(data.response).length > 0) {
+    data.response.games.forEach(handleGame.bind(null, user));
+  }
+  next();
+}
+
+function handleGame(user, game) {
+  delete game.playtime_forever;
+  delete game.has_community_visible_stats;
+  Game.findOrCreate(game, game).done(handleGameCreation);
+  var user_ids = gamesHash.get(game.appid) || [];
+  if (user_ids.indexOf(user) == -1) {
+    user_ids.push(user);
+  }
+  gamesHash.set(game.appid, user_ids);
+}
+
+function handleGameCreation(error, created_game) {
+  if (error) {
+    console.error("Error while saving game: ", game, error);
+  } else if (typeof created === 'undefined' && Game.adapter.identity !== 'sails-mongo') {
+    console.log("whats wrong with this game?", game);
+  }
 }
 
 var SteamService = {};
@@ -131,13 +137,7 @@ SteamService.games = function(steam_id, callback) {
   if (/\d{17}/.test(steam_id)) {
     getGames(steam_id, callback);
   } else {
-    client.resolveVanityURL(steam_id).on('complete', function(result, res) {
-      if (result.response.success == 42) {
-        callback('Found no match for ' + steam_id);
-      } else {
-        getGames(result.response.steamid, callback);
-      }
-    });
+    client.resolveVanityURL(steam_id).on('complete', getGamesForResolvedVanityURL.bind(null, callback));
   }
 };
 
@@ -147,6 +147,14 @@ SteamService.player = function(user_id, callback) {
       console.log(result.response.players[0].personaname);
   });
 };
+function getGamesForResolvedVanityURL(callback, result) {
+  if (result.response.success == 42) {
+    callback('Found no match for ' + steam_id);
+  } else {
+    getGames(result.response.steamid, callback);
+  }
+
+}
 
 SteamService.getGroupMembers = function(steam_id, callback) {
   callback = callback || noop;
@@ -158,19 +166,23 @@ SteamService.getGroupMembers = function(steam_id, callback) {
     url += '/groups/';
   }
   url += steam_id + '/memberslistxml/?xml=1';
-  rest.get(url).on('complete', function(data) {
-    re.try(function parseXML(retryCount, done) {
-      parseString(data, function(err, result) {
-        if (err) {
-          console.error("Error while parsing xml", err);
-          done(err);
-        } else {
-          done(err, result.memberList.members[0].steamID64);
-        }
-      });
-    }, callback);
-  });
+  rest.get(url).on('complete', parseMemberList.bind(null, callback));
 };
+
+function parseMemberList(cb, data) {
+  re.try(parseXML.bind(null, data), cb);
+}
+
+function parseXML(data, retryCount, done) {
+  parseString(data, function(err, result) {
+    if (err) {
+      console.error("Error while parsing xml", err);
+      done(err);
+    } else {
+      done(err, result.memberList.members[0].steamID64);
+    }
+  });
+}
 
 SteamService.getCommonGames = function(userList, limit, callback) {
   callback = callback || noop;
@@ -179,16 +191,18 @@ SteamService.getCommonGames = function(userList, limit, callback) {
     limit = userList.length;
   }
   limit = typeof limit !== 'undefined' ? limit : userList.length;
-  populateGamesHash(userList, function() {
-    var game_ids = [];
-    gamesHash.forEach(function(user_ids, game_id) {
-      if (limit == user_ids.length) {
-        game_ids.push(game_id);
-      }
-    });
-    callback(game_ids);
-  });
+  populateGamesHash(userList, callbackFromPopulate.bind(null, limit, callback));
 };
+
+function callbackFromPopulate(limit, cb) {
+  var game_ids = [];
+  gamesHash.forEach(function(user_ids, game_id) {
+    if (limit == user_ids.length) {
+      game_ids.push(game_id);
+    }
+  });
+  cb(game_ids);
+}
 
 SteamService.getGame = function(game_id, callback) {
   callback = callback || noop;

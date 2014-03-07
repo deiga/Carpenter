@@ -63,7 +63,8 @@ module.exports = {
 			if (!user) {
 				return res.send(404);
 			}
-			return res.json(user);
+			//return res.send(user);
+			return res.view({user: user});
 		});
 
 	},
