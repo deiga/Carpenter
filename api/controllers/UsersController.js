@@ -1,3 +1,11 @@
+var openid = require('openid');
+var relyingPart = new openid.RelyingParty(
+                    'http://localhost:1337/user/callback',
+                    '/',
+                    true,
+                    false,
+                    []);
+
 /**
  * UsersController
  *
@@ -16,6 +24,23 @@
  */
 
 module.exports = {
+
+ callback: function(req, res) {
+  console.log(req);
+ },    
+  
+ login: function (req, res) {
+  relyingPart.authenticate('http://steamcommunity.com/openid', false, function(error, authUrl) {
+    if (error) {
+      res.writeHead(200);
+      res.end('Authentication failed: ' + error.message);
+    }
+    else {
+      res.writeHead(302, {location: authUrl });
+      res.end();
+    }
+  });
+ },
     
   
 	show: function (req, res) {
