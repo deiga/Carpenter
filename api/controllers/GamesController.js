@@ -30,17 +30,21 @@ var GamesController = {};
     req.query.users.split(',').forEach(function(user_id) {
       user_ids.push(user_id.trim());
     });
-  }
-  else {
+  } else {
     user_ids = req.params.ids.split(',');
   }
   getCommonGames(user_ids.length, res, null, user_ids);
 };
 
 GamesController.group = function (req, res) {
-  var group_id = req.params.id;
+  var group_id;
+  if (typeof req.params.group_name === 'undefined') {
+    group_id = req.query.group_name.trim();
+  } else {
+    group_id = req.params.group_name;
+  }
   console.log('Group ID: ' + group_id);
-  SteamService.getGroupMembers(group_id, getCommonGames.bind(null, limit, res));
+  SteamService.getGroupMembers(group_id, getCommonGames.bind(null, 4, res));
 };
 
 function getCommonGames(limit, res, err, user_ids) {

@@ -9,3 +9,9 @@ block body
     form(action="/games/common/" method="get")
       input(type='text', name='users')
       input(type='submit', value='Search')
+  p
+    |Input steam group name
+    br
+    form(action="/games/group/" method="get")
+      input(type='text', name='group_name')
+      input(type='submit', value='Search')
