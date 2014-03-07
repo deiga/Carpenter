@@ -93,7 +93,8 @@ module.exports.routes = {
   'get /*(^.*)': 'UserController.profile'
 
   */
- 'get /user/callback': 'user.callback',
+ 'get /users/login': 'users.login',
+ 'get /users/callback': 'users.callback',
  'get /games/group/:id': 'games.group',
  'get /games/common/:ids': 'games.common',
  'get /games': {

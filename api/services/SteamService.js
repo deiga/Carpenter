@@ -24,6 +24,18 @@ Steam = rest.service(function() {
     };
     return this.get('/ISteamUser/ResolveVanityURL/v0001/', opts );
   },
+  playerSummary: function(user_id) {
+    var opts = {
+      query: {
+        key: this.key,
+        steamids: user_id
+      },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+    return this.get('/ISteamUser/GetPlayerSummaries/v0002/', opts);
+  },
   games: function(steam_id) {
     var opts = {
       query: {
@@ -65,6 +77,10 @@ function getGames(steam_id, callback) {
 
 function getGameInfo(game_id, callback) {
 	client.gameInfo(game_id).on('complete', callback);
+}
+
+function getPlayerSummary(user_id, callback) {
+  client.playerSummary(user_id).on('complete', callback);
 }
 
 // https://developer.valvesoftware.com/wiki/SteamID#Steam_ID_as_a_Steam_Community_ID
@@ -125,6 +141,12 @@ SteamService.games = function(steam_id, callback) {
   }
 };
 
+SteamService.player = function(user_id, callback) {
+  callback = callback || noop;
+  getPlayerSummary(user_id, function(result, res) {
+      console.log(result.response.players[0].personaname);
+  });
+};
 function getGamesForResolvedVanityURL(callback, result) {
   if (result.response.success == 42) {
     callback('Found no match for ' + steam_id);

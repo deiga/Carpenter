@@ -2,7 +2,8 @@ extend ../layout
 
 block body
   div#login
-    |username
-    input(type='text', name='user')
-    |password
-    input(type='password', name='pswd')
+    |Give your Steam ID to get profile and friend information
+    br
+    form(action='/users/login' method='get')
+      a(href="/users/login")
+        img(src="http://cdn.steamcommunity.com/public/images/signinthroughsteam/sits_small.png")
