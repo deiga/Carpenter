@@ -120,9 +120,9 @@ function handleGame(user, game) {
 
 function handleGameCreation(error, created_game) {
   if (error) {
-    console.error("Error while saving game: ", game, error);
+    console.error("Error while saving game: ", created_game, error);
   } else if (typeof created === 'undefined' && Game.adapter.identity !== 'sails-mongo') {
-    console.log("whats wrong with this game?", game);
+    console.log("whats wrong with this game?", created_game);
   }
 }
 
