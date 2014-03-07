@@ -26,9 +26,8 @@ var relyingPart = new openid.RelyingParty(
 module.exports = {
 
  callback: function(req, res) {
-  console.log(req);
   var user_id = req.query['openid.identity'].split('/').slice(-1)[0];
-  User.findOrCreate({ id: user_id }, { id: user_id }, function(error, user) {
+  User.findOrCreate({ steam_id: user_id }, { steam_id: user_id, steam_nick: SteamService.player(user_id) }, function(error, user) {
     console.log(user);
     if (error) {
       return res.send(err, 500);
