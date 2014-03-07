@@ -2,7 +2,8 @@ extend ../layout
 
 block body
   div#login
-    |username
-    input(type='text', name='user')
-    |password
-    input(type='password', name='pswd')
+    |Give your Steam ID to get profile and friend information
+    br
+    form(action='/users/login' method='get')
+      input(type='text', name='openid_identifier')
+      input(type='submit', value='login')

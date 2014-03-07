@@ -1,6 +1,6 @@
 var openid = require('openid');
 var relyingPart = new openid.RelyingParty(
-                    'http://localhost:1337/user/callback',
+                    'http://localhost:1337/users/callback',
                     '/',
                     true,
                     false,
@@ -27,6 +27,17 @@ module.exports = {
 
  callback: function(req, res) {
   console.log(req);
+  var user_id = req.query['openid.identity'].split('/').slice(-1)[0];
+  User.findOrCreate({ id: user_id }, { id: user_id }, function(error, user) {
+    console.log(user);
+    if (error) {
+      return res.send(err, 500);
+    }
+    if (!user) {
+      return res.send(404);
+    } 
+  });
+  res.redirect('/users/show/' + user_id);
  },    
   
  login: function (req, res) {
@@ -44,7 +55,7 @@ module.exports = {
     
   
 	show: function (req, res) {
-		var user_id = parseInt(req.params.id);
+		var user_id = req.params.id;
 		console.log(user_id);
 		User.findOne({ id: user_id }, function(err, user) {
 			if (err) {
