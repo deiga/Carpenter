@@ -29,10 +29,10 @@ module.exports = {
   var user_id = req.query['openid.identity'].split('/').slice(-1)[0];
   SteamService.player(user_id, function(user_name) {
     User.findOrCreate({steam_id: user_id}, {steam_id: user_id, steam_nick: user_name}, function(error, user) {
-      console.log(user);
+      console.log(user);  
+      res.redirect('/users/' + user_id);
     });
   });
-  res.redirect('/users/show/' + user_id);
  },    
   
  login: function (req, res) {
