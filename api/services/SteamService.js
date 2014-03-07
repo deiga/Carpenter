@@ -142,9 +142,8 @@ SteamService.games = function(steam_id, callback) {
 };
 
 SteamService.player = function(user_id, callback) {
-  callback = callback || noop;
   getPlayerSummary(user_id, function(result, res) {
-      console.log(result.response.players[0].personaname);
+      callback(result.response.players[0].personaname);
   });
 };
 function getGamesForResolvedVanityURL(callback, result) {
