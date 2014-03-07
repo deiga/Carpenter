@@ -1,5 +1,8 @@
 extend ../layout
 
 block body
-  h1 Page of !{user.steam_id}
-  
+	h1 !{user.steam_nick}
+
+	- for (var x = 0; x < games.length-1; x++)
+			li 
+				a(href='http://store.steampowered.com/app/'+games[x].appid) !{games[x].name}
