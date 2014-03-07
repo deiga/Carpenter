@@ -143,13 +143,13 @@ SteamService.player = function(user_id, callback) {
       console.log(result.response.players[0].personaname);
   });
 };
+
 function getGamesForResolvedVanityURL(callback, result) {
   if (result.response.success == 42) {
     callback('Found no match for ' + steam_id);
   } else {
     getGames(result.response.steamid, callback);
   }
-
 }
 
 SteamService.getGroupMembers = function(steam_id, callback) {
