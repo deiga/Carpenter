@@ -196,6 +196,7 @@ function callbackFromPopulate(limit, cb) {
       game_ids.push(game_id);
     }
   });
+  gamesHash = new HashMap();
   cb(game_ids);
 }
 
