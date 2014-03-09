@@ -25,6 +25,7 @@
     "tests"
   ],
   "dependencies": {
-    "pure": "~0.4.2"
+    "pure": "~0.4.2",
+    "normalize-css": "~3.0.0"
   }
 }

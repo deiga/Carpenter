@@ -45,3 +45,4 @@ nbproject
 config/local.js
 .env
 assets/linker/bower_components
+assets/bower_components
