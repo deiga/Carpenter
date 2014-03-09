@@ -5,5 +5,8 @@ nav#navigation.pure-menu.pure-menu-open.pure-menu-horizontal.pure-menu-fixed
     li
       a(href="/games/") Find common games
     li
-      a(href="/users/login")
-        img(src="http://cdn.steamcommunity.com/public/images/signinthroughsteam/sits_large_border.png")
+      if req.session.user
+        a(href="/users/#{req.session.user}") User
+      else
+        a(href="/users/login")
+          img(src="http://cdn.steamcommunity.com/public/images/signinthroughsteam/sits_large_border.png")
