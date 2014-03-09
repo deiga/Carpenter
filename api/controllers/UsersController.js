@@ -1,6 +1,6 @@
 var openid = require('openid');
 var relyingPart = new openid.RelyingParty(
-                    'http://localhost:1337/users/callback',
+  process.env.STEAM_AUTH_CALLBACK + '/users/callback',
   '/',
   true,
   false,
