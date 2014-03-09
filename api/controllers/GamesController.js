@@ -27,42 +27,42 @@ GamesController.group = function (req, res) {
 function getCommonGames(limit, res, err, user_ids) {
   if (err) {
     finish(res, err);
-  } else {
-    SteamService.getCommonGames(user_ids, limit, listGames.bind(null, res));
+    return;
   }
+  SteamService.getCommonGames(user_ids, limit, listGames.bind(null, res));
 }
 
 function listGames(res, err, game_ids) {
   if (err) {
     finish(res, err);
-  } else {
-    var games = [];
-    var next = after(game_ids.length, finish.bind(null, res));
-    game_ids.forEach(function(game_id) {
-      SteamService.getGame(game_id, function(err, game) {
-        games.push(game);
-        next(err, games);
-      });
-    });
+    return;
   }
+  var games = [];
+  var next = after(game_ids.length, finish.bind(null, res));
+  game_ids.forEach(function(game_id) {
+    SteamService.getGame(game_id, function(err, game) {
+      games.push(game);
+      next(err, games);
+    });
+  });
 }
 
 function finish(res, err, games) {
   if (err) {
     res.view('500', {errors: err});
-  } else {
-    var names = res.req.query.users || res.req.query.group_name;
-    games.sort(function(a, b) {
-      if (a.name > b.name) {
-        return 1;
-      }
-      if (a.name < b.name) {
-        return -1;
-      }
-      return 0;
-    });
-    res.view('games/common', { games: games, names: names } );
+    return;
   }
+  var names = res.req.query.users || res.req.query.group_name;
+  games.sort(function(a, b) {
+    if (a.name > b.name) {
+      return 1;
+    }
+    if (a.name < b.name) {
+      return -1;
+    }
+    return 0;
+  });
+  res.view('games/common', { games: games, names: names } );
   console.log('All done!');
 }
 
