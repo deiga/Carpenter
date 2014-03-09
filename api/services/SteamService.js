@@ -79,7 +79,7 @@ SteamService.games = function(steam_id, callback) {
 
 SteamService.player = function(user_id, callback) {
   callback = callback || noop;
-  getPlayerSummary(user_id, function(result, res) {
+  getPlayerSummary(user_id, function(err, result, res) {
     if (result.response.players.length > 0) {
       callback(null, result.response.players[0].personaname);
     } else {
