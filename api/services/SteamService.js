@@ -1,71 +1,13 @@
 var rest = require('restler');
-var dotenv = require('dotenv');
 var Long = require('long');
 var parseString = require('xml2js').parseString;
 var HashMap = require('hashmap').HashMap;
 var after = require('after');
 var Re = require('re'),
-re = new Re();
-
-Steam = rest.service(function() {
-  this.key = process.env.STEAM_API_KEY;
-}, {
-  baseURL: 'https://api.steampowered.com'
-}, {
-  resolveVanityURL: function(vanity_url) {
-    var opts = {
-      query: {
-        key: this.key,
-        vanityurl: vanity_url
-      },
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-    return this.get('/ISteamUser/ResolveVanityURL/v0001/', opts );
-  },
-  playerSummary: function(user_id) {
-    var opts = {
-      query: {
-        key: this.key,
-        steamids: user_id
-      },
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-    return this.get('/ISteamUser/GetPlayerSummaries/v0002/', opts);
-  },
-  games: function(steam_id) {
-    var opts = {
-      query: {
-        key: this.key,
-        steamid: steam_id,
-        include_appinfo: 1
-      },
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-    return this.get('/IPlayerService/GetOwnedGames/v0001/', opts );
-  },
-  gameInfo: function(game_id) {
-    var opts = {
-     query: {
-      key: this.key,
-      appid: game_id,
-    },
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
-  return this.get('ISteamUserStats/GetSchemaForGame/v0002/', opts);
-},
-  // http://api.steampowered.com/ISteamUser/GetUserGroupList/v0001?key=XXX&steamid=YYY
-});
-
-dotenv.load();
-var client = new Steam();
+  re = new Re();
+require('dotenv').load();
+var client = require('./steamrestapi').configure(process.env.STEAM_API_KEY);
+console.log(client);
 
 function noop(data) {
   console.log("NOOP", data);
