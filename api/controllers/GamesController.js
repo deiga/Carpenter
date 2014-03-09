@@ -16,7 +16,7 @@ var after = require('after');
  *
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
-var GamesController = {};
+ var GamesController = {};
 
 /**
  * Action blueprints:
@@ -31,6 +31,7 @@ var GamesController = {};
   } else {
     user_ids = req.params.ids.split(',');
   }
+  user_ids = user_ids.filter(function(str) { return str !== '' && str !== null && typeof str !== 'undefined'; });
   getCommonGames(user_ids.length, res, null, user_ids);
 };
 
@@ -41,38 +42,49 @@ GamesController.group = function (req, res) {
   } else {
     group_id = req.params.group_name;
   }
-  console.log('Group ID: ' + group_id);
+  console.info('Group ID: ' + group_id);
   SteamService.getGroupMembers(group_id, getCommonGames.bind(null, 4, res));
 };
 
 function getCommonGames(limit, res, err, user_ids) {
-  SteamService.getCommonGames(user_ids, limit, listGames.bind(null, res));
+  if (err) {
+    finish(res, err);
+  } else {
+    SteamService.getCommonGames(user_ids, limit, listGames.bind(null, res));
+  }
 }
 
-function listGames(res, game_ids) {
-  var games = [];
-  var next = after(game_ids.length, finish.bind(null, res));
-  game_ids.forEach(function(game_id) {
-    SteamService.getGame(game_id, function(game) {
-       games.push(game);
-       next(null, games);
+function listGames(res, err, game_ids) {
+  if (err) {
+    finish(res, err);
+  } else {
+    var games = [];
+    var next = after(game_ids.length, finish.bind(null, res));
+    game_ids.forEach(function(game_id) {
+      SteamService.getGame(game_id, function(err, game) {
+        games.push(game);
+        next(err, games);
+      });
     });
-  });
+  }
 }
 
 function finish(res, err, games) {
-  var names = res.req.query.users || res.req.query.group_name;
-  console.log(res.req.query.users);
-  games.sort(function(a, b) {
-    if (a.name > b.name) {
-      return 1;
-    }
-    if (a.name < b.name) {
-      return -1;
-    }
-    return 0;
-  });
-  res.view('games/common', { games: games, names: names } );
+  if (err) {
+    res.view('500', {errors: err});
+  } else {
+    var names = res.req.query.users || res.req.query.group_name;
+    games.sort(function(a, b) {
+      if (a.name > b.name) {
+        return 1;
+      }
+      if (a.name < b.name) {
+        return -1;
+      }
+      return 0;
+    });
+    res.view('games/common', { games: games, names: names } );
+  }
   console.log('All done!');
 }
 
@@ -81,5 +93,5 @@ function finish(res, err, games) {
  * Overrides for the settings in `config/controllers.js`
  * (specific to GamesController)
  */
-GamesController._config = {};
-module.exports = GamesController;
+ GamesController._config = {};
+ module.exports = GamesController;

@@ -1,32 +1,31 @@
 var rest = require('restler');
 var Long = require('long');
 var parseString = require('xml2js').parseString;
-var HashMap = require('hashmap').HashMap;
+var HashMap = require('hashmap').HashMap,
+gamesHash = new HashMap();
 var after = require('after');
 var Re = require('re'),
-  re = new Re();
+re = new Re();
 require('dotenv').load();
 var client = require('./steamrestapi').configure(process.env.STEAM_API_KEY);
-console.log(client);
 
-function noop(data) {
-  console.log("NOOP", data);
+function noop(err, result) {
+  console.error(err);
+  console.log(result);
 }
 
 function getGames(steam_id, callback) {
-  client.games(steam_id).on('complete', callback);
+  client.games(steam_id).on('complete', callback.bind(null, null));
 }
 
 function getPlayerSummary(user_id, callback) {
-  client.playerSummary(user_id).on('complete', callback);
+  client.playerSummary(user_id).on('complete', callback.bind(null, null));
 }
 
 // https://developer.valvesoftware.com/wiki/SteamID#Steam_ID_as_a_Steam_Community_ID
 function calculateSteamGroupId64(steam_group_id32) {
   return Long.ONE.shiftLeft(56).or(new Long(7).shiftLeft(52)).or(new Long(steam_group_id32)).toString();
 }
-
-var gamesHash = new HashMap();
 
 function populateGamesHash(userList, callback) {
   callback = callback || noop;
@@ -35,18 +34,17 @@ function populateGamesHash(userList, callback) {
   userList.forEach(insertUsersGames.bind(null, next));
 }
 
-function insertUsersGames(cb, user) {
-  SteamService.games(user, insertGameData.bind(null, user, cb));
+function insertUsersGames(callback, user) {
+  SteamService.games(user, insertGameData.bind(null, user, callback));
 }
 
-function insertGameData(user, next, data) {
+function insertGameData(user, next, err, data) {
   if (typeof data.response === 'undefined') {
-    console.log("Response undefined", data);
-  }
-  if (typeof data.response !== 'undefined' &&  Object.getOwnPropertyNames(data.response).length > 0) {
+    console.error("Response undefined", data);
+  } else if (Object.getOwnPropertyNames(data.response).length > 0) {
     data.response.games.forEach(handleGame.bind(null, user));
   }
-  next();
+  next(err);
 }
 
 function handleGame(user, game) {
@@ -80,14 +78,21 @@ SteamService.games = function(steam_id, callback) {
 };
 
 SteamService.player = function(user_id, callback) {
+  callback = callback || noop;
   getPlayerSummary(user_id, function(result, res) {
-      callback(result.response.players[0].personaname);
+    if (result.response.players.length > 0) {
+      callback(null, result.response.players[0].personaname);
+    } else {
+      callback('Could not find player: ' + user_id, null);
+    }
   });
 };
 
 function getGamesForResolvedVanityURL(steam_id, callback, result) {
-  if (result.response.success == 42) {
-    callback('Found no match for ' + steam_id);
+  if (Object.getOwnPropertyNames(result).length === 0) {
+    callback('Error in request. id: "' + steam_id + '"', {});
+  } else if (result.response.success == 42) {
+    callback('Found no match for id: "' + steam_id + '"', {});
   } else {
     getGames(result.response.steamid, callback);
   }
@@ -106,8 +111,8 @@ SteamService.getGroupMembers = function(steam_id, callback) {
   re.try(getMemberList.bind(null, url), callback);
 };
 
-function getMemberList(url, retryCount, cb) {
-  rest.get(url).on('complete', parseMemberList.bind(null, cb));
+function getMemberList(url, retryCount, callback) {
+  rest.get(url).on('complete', parseMemberList.bind(null, callback));
 }
 
 function parseMemberList(done, data) {
@@ -131,21 +136,21 @@ SteamService.getCommonGames = function(userList, limit, callback) {
   populateGamesHash(userList, callbackFromPopulate.bind(null, limit, callback));
 };
 
-function callbackFromPopulate(limit, cb) {
+function callbackFromPopulate(limit, callback, err) {
   var game_ids = [];
   gamesHash.forEach(function(user_ids, game_id) {
     if (limit == user_ids.length) {
       game_ids.push(game_id);
     }
   });
-  gamesHash = new HashMap();
-  cb(game_ids);
+  gamesHash.clear();
+  callback(err, game_ids);
 }
 
 SteamService.getGame = function(game_id, callback) {
   callback = callback || noop;
   Game.findOne({appid: game_id.toString()}, function(err, game) {
-    callback(game);
+    callback(err, game);
   });
 };
 
