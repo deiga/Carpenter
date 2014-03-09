@@ -29,17 +29,16 @@ module.exports = {
   var user_id = req.query['openid.identity'].split('/').slice(-1)[0];
   SteamService.player(user_id, function(user_name) {
     User.findOrCreate({steam_id: user_id}, {steam_id: user_id, steam_nick: user_name}, function(error, user) {
-      console.log(user);  
       req.session.user = user.steam_id;
       res.redirect('/users/' + user_id);
     });
   });
- },    
-  
+ },
+
  login: function (req, res) {
   relyingPart.authenticate('http://steamcommunity.com/openid', false, function(error, authUrl) {
     if (error) {
-    	if (req.session.user) req.session.user = null;
+      if (req.session.user) req.session.user = null;
       res.writeHead(200);
       res.end('Authentication failed: ' + error.message);
     }
@@ -49,8 +48,8 @@ module.exports = {
     }
   });
  },
-    
-  
+
+
 	show: function (req, res) {
 		var user_id = req.params.id;
 		User.findOne({ steam_id: user_id }, function(err, user) {
@@ -61,10 +60,9 @@ module.exports = {
 				return res.send(404);
 			}
 			SteamService.games(user_id, function (result) {
-				console.log(result.response.games);
 				return res.view({user: user, games: result.response.games});
 			});
-			
+
 		});
 
 	},
@@ -76,5 +74,5 @@ module.exports = {
    */
   _config: {}
 
-  
+
 };
