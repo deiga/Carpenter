@@ -1,0 +1,8 @@
+Pvm		    Tunnit		Selite
+2.3.2014	3		  Ympäristön pystytys ja nodeen tutustumista
+3.3.2014	2		  Ryhmäpalaveri, steam service
+4.3.2014  	5         Ryhmäpalaveri, steam service
+5.3.2014  	1         käyttäjä
+7.3.2014  	8         Porukalla koodausta
+			
+			19
