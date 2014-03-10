@@ -1,11 +1,12 @@
 Carpenter
 =========
+[![Build Status](https://travis-ci.org/deiga/Carpenter.png?branch=dev)](https://travis-ci.org/deiga/Carpenter) [![Dependency Status](https://david-dm.org/deiga/Carpenter.png)](https://david-dm.org/deiga/Carpenter)
 
 Repo for [NodeJS project](https://github.com/tuhoojabotti/NodeJS-ohjelmointiprojekti-k2014) at [University of Helsinki](https://www.cs.helsinki.fi/)
 
 ## Overview
 
-Carpenter is a  webapp which allows you to input a list of steam nicknames and outputs the games these people share. You can also search common games for a group and login with Steam openID. In the future, this openID-login will enable you to also add non-Steam games to your list as well as let you see a list of people who share some games with you, organized by the games. So, when you login with your Steam ID you will in the future get a view of your Steam and possible non-Steam games, and with each game all your friends, who also own that game, would be listed under the game.  
+Carpenter is a  webapp which allows you to input a list of steam nicknames and outputs the games these people share. You can also search common games for a group and login with Steam openID. In the future, this openID-login will enable you to also add non-Steam games to your list as well as let you see a list of people who share some games with you, organized by the games. So, when you login with your Steam ID you will in the future get a view of your Steam and possible non-Steam games, and with each game all your friends, who also own that game, would be listed under the game.
 
 ## Features
 
