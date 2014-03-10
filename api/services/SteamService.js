@@ -7,7 +7,7 @@ var after = require('after');
 var Re = require('re'),
 re = new Re();
 require('dotenv').load();
-var client = require('./steamrestapi').configure(process.env.STEAM_API_KEY);
+var client = require('./SteamRestAPI').configure(process.env.STEAM_API_KEY);
 
 function noop(err, result) {
   console.error(err);
