@@ -33,7 +33,7 @@ module.exports.routes = {
   //
   // (This would also work if you had a file at: `/views/home.ejs`)
   '/': {
-    view: 'home/index'
+    view: 'games/index'
   },
 
   /*
@@ -97,8 +97,8 @@ module.exports.routes = {
  'get /users/callback': 'users.callback',
  'get /games/group/:id': 'games.group',
  'get /games/common/:ids': 'games.common',
- 'get /games': {
-    view: 'games/index'
+ 'get /about': {
+    view: 'home/about'
  },
  'get /users/:id': 'users.show'
 };
