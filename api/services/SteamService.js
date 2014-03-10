@@ -4,10 +4,9 @@ var parseString = require('xml2js').parseString;
 var HashMap = require('hashmap').HashMap,
 gamesHash = new HashMap();
 var after = require('after');
-var Re = require('re'),
-re = new Re();
 require('dotenv').load();
 var client = require('./SteamRestAPI').configure(process.env.STEAM_API_KEY);
+var domain = require('domain');
 
 function noop(err, result) {
   console.error(err);
@@ -27,11 +26,11 @@ function calculateSteamGroupId64(steam_group_id32) {
   return Long.ONE.shiftLeft(56).or(new Long(7).shiftLeft(52)).or(new Long(steam_group_id32)).toString();
 }
 
-function populateGamesHash(userList, callback) {
+function populateGamesHash(user_list, callback) {
   callback = callback || noop;
 
-  var next = after(userList.length, callback);
-  userList.forEach(insertUsersGames.bind(null, next));
+  var next = after(user_list.length, callback);
+  user_list.forEach(insertUsersGames.bind(null, next));
 }
 
 function insertUsersGames(callback, user) {
@@ -108,37 +107,51 @@ SteamService.getGroupMembers = function(steam_id, callback) {
     url += '/groups/';
   }
   url += steam_id + '/memberslistxml/?xml=1';
-  re.try(getMemberList.bind(null, url), callback);
+  getMemberList(url, 5, callback);
 };
 
-function getMemberList(url, retryCount, callback) {
-  rest.get(url).on('complete', parseMemberList.bind(null, callback));
-}
-
-function parseMemberList(done, data, response) {
-  try {
-    parseString(data, function(err, result) {
+function getMemberList(url, retries_left, callback) {
+  var d = domain.create();
+  function parseMemberList(data) {
+    if (steamGroupError) {
+      console.log("No group found, quitting");
+      return callback(new Error("Given group is not valid, are you sure you typed the name correctly?"), []);
+    }
+    d.run(parseString.bind(null, data, function(err, result) {
       if (err) {
-        console.error("Error while parsing xml, retrying", data);
-        done(err);
+        console.error("Error while parsing xml, retrying");
+        setImmediate(getMemberList.bind(null, url, retries_left - 1, callback));
       } else {
-        done(null, result.memberList.members[0].steamID64);
+        callback(null, result.memberList.members[0].steamID64);
       }
-    });
-  } catch (err) {
-    console.error("Error while parsing xml, retrying", data);
-    done(err);
+    }));
+  }
+
+  d.on('error', function(err) {
+    console.error("Error while parsing xml, retrying");
+    getMemberList.bind(null, url, retries_left - 1, callback);
+  });
+
+  if (retries_left > 0) {
+    rest.get(url).on('complete', parseMemberList);
+  } else {
+    return callback(new Error("Problem with Steam API, please try again"), []);
   }
 }
 
-SteamService.getCommonGames = function(userList, limit, callback) {
+function steamGroupError(data) {
+  return data.indexOf("Invalid group URL") !== -1 || data.indexOf("No group could be retrieved for the given URL") !== -1;
+}
+
+
+SteamService.getCommonGames = function(user_list, limit, callback) {
   callback = callback || noop;
   if (typeof limit === 'function') {
     callback = limit;
-    limit = userList.length;
+    limit = user_list.length;
   }
-  limit = typeof limit !== 'undefined' ? limit : userList.length;
-  populateGamesHash(userList, callbackFromPopulate.bind(null, limit, callback));
+  limit = typeof limit !== 'undefined' ? limit : user_list.length;
+  populateGamesHash(user_list, callbackFromPopulate.bind(null, limit, callback));
 };
 
 function callbackFromPopulate(limit, callback, err) {

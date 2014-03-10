@@ -26,16 +26,14 @@ GamesController.group = function (req, res) {
 
 function getCommonGames(limit, res, err, user_ids) {
   if (err) {
-    finish(res, err);
-    return;
+    return error(res, err);
   }
   SteamService.getCommonGames(user_ids, limit, listGames.bind(null, res));
 }
 
 function listGames(res, err, game_ids) {
   if (err) {
-    finish(res, err);
-    return;
+    return error(res, err);
   }
   var games = [];
   var next = after(game_ids.length, finish.bind(null, res));
@@ -47,11 +45,7 @@ function listGames(res, err, game_ids) {
   });
 }
 
-function finish(res, err, games) {
-  if (err) {
-    res.view('500', {errors: err});
-    return;
-  }
+function finish(res, games) {
   var names = res.req.query.users || res.req.query.group_name;
   games.sort(function(a, b) {
     if (a.name > b.name) {
@@ -63,6 +57,12 @@ function finish(res, err, games) {
     return 0;
   });
   res.view('games/common', { games: games, names: names } );
+  console.log('All done!');
+}
+
+function error(res, err) {
+  console.error(err);
+  res.view('500', {errors: err.toString()});
   console.log('All done!');
 }
 
