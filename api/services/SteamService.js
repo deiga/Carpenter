@@ -118,7 +118,7 @@ function getMemberList(url, retryCount, callback) {
 function parseMemberList(done, data) {
   parseString(data, function(err, result) {
     if (err) {
-      console.error("Error while parsing xml, retrying");
+      console.error("Error while parsing xml, retrying", data);
       done(err);
     } else {
       done(err, result.memberList.members[0].steamID64);
