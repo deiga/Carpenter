@@ -115,15 +115,20 @@ function getMemberList(url, retryCount, callback) {
   rest.get(url).on('complete', parseMemberList.bind(null, callback));
 }
 
-function parseMemberList(done, data) {
-  parseString(data, function(err, result) {
-    if (err) {
-      console.error("Error while parsing xml, retrying", data);
-      done(err);
-    } else {
-      done(err, result.memberList.members[0].steamID64);
-    }
-  });
+function parseMemberList(done, data, response) {
+  try {
+    parseString(data, function(err, result) {
+      if (err) {
+        console.error("Error while parsing xml, retrying", data);
+        done(err);
+      } else {
+        done(null, result.memberList.members[0].steamID64);
+      }
+    });
+  } catch (err) {
+    console.error("Error while parsing xml, retrying", data);
+    done(err);
+  }
 }
 
 SteamService.getCommonGames = function(userList, limit, callback) {
