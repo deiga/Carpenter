@@ -45,7 +45,10 @@ function listGames(res, err, game_ids) {
   });
 }
 
-function finish(res, games) {
+function finish(res, err, games) {
+  if (err) {
+    return error(res, err);
+  }
   var names = res.req.query.users || res.req.query.group_name;
   games.sort(function(a, b) {
     if (a.name > b.name) {

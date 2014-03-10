@@ -114,7 +114,7 @@ SteamService.getGroupMembers = function(steam_id, callback) {
 function getMemberList(url, retries_left, callback) {
   var d = domain.create();
   function parseMemberList(data) {
-    if (steamGroupError) {
+    if (steamGroupError(data)) {
       console.log("No group found, quitting");
       return callback(new Error("Given group is not valid, are you sure you typed the name correctly?"), []);
     }
