@@ -100,6 +100,7 @@ function getGamesForResolvedVanityURL(steam_id, callback, result) {
 SteamService.getGroupMembers = function(steam_id, callback) {
   callback = callback || noop;
   var url = 'http://steamcommunity.com';
+  steam_id = steam_id.replace(/[\[\]#\(\)]/g, '');
   if (/\d{3,10}/.test(steam_id)) {
     steam_id = calculateSteamGroupId64(steam_id);
     url += '/gid/';
