@@ -3,7 +3,13 @@ extend ../layout
 block body
   h1 Find shared games
   p
-    |Input all users delimited with comma, e.g. "Taxus, deiga, ..."
+    |Input all users delimited with comma, e.g. "Th0ra, deiga, ..."
+    br
+    |Examples:
+    br
+    |'http://steamcommunity.com/id/<strong>deiga</strong>'
+    br
+    |'http://steamcommunity.com/profiles/<strong>76561197995703445</strong>'
     br
     form.pure-form(action="/games/common/" method="get")
       input(type='text', name='users')
