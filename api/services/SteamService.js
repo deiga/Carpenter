@@ -100,7 +100,7 @@ function getGamesForResolvedVanityURL(steam_id, callback, result) {
 SteamService.getGroupMembers = function(steam_id, callback) {
   callback = callback || noop;
   var url = 'http://steamcommunity.com';
-  steam_id = steam_id.replace(/[\[\]#\(\)]/g, '');
+  steam_id = steam_id.replace(/[\[\]#\(\)\.]/g, '');
   if (/\d{3,10}/.test(steam_id)) {
     steam_id = calculateSteamGroupId64(steam_id);
     url += '/gid/';
@@ -158,7 +158,7 @@ SteamService.getCommonGames = function(user_list, limit, callback) {
 function callbackFromPopulate(limit, callback, err) {
   var game_ids = [];
   gamesHash.forEach(function(user_ids, game_id) {
-    if (limit == user_ids.length) {
+    if (limit <= user_ids.length) {
       game_ids.push(game_id);
     }
   });
