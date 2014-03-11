@@ -64,8 +64,9 @@ function finish(res, err, games) {
 }
 
 function error(res, err) {
-  console.error(err);
-  res.view('500', {errors: err.toString()});
+  console.error("ERROR:", err);
+  res.req.flash('error', err.toString());
+  res.redirect('/');
   console.log('All done!');
 }
 

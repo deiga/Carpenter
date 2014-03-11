@@ -116,7 +116,7 @@ function getMemberList(url, retries_left, callback) {
   function parseMemberList(data) {
     if (steamGroupError(data)) {
       console.log("No group found, quitting");
-      return callback(new Error("Given group is not valid, are you sure you typed the name correctly?"), []);
+      return callback("Given group is not valid, are you sure you typed the name correctly?", []);
     }
     d.run(parseString.bind(null, data, function(err, result) {
       if (err) {
@@ -136,7 +136,7 @@ function getMemberList(url, retries_left, callback) {
   if (retries_left > 0) {
     rest.get(url).on('complete', parseMemberList);
   } else {
-    return callback(new Error("Problem with Steam API, please try again"), []);
+    return callback("Problem with Steam API, please try again", []);
   }
 }
 

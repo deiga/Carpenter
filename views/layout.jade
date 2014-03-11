@@ -30,6 +30,10 @@ html
     header
       include partials/_navigation
     section#contents
+      - var error = req.flash('error')
+      if error.length > 0
+        .error
+          = error
       block body
     footer
       |Made by: &nbsp;
