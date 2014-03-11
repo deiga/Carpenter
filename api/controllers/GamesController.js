@@ -34,6 +34,8 @@ function getCommonGames(limit, res, err, user_ids) {
 function listGames(res, err, game_ids) {
   if (err) {
     return error(res, err);
+  } else if(game_ids.length === 0) {
+    return finish(res, null, []);
   }
   var games = [];
   var next = after(game_ids.length, finish.bind(null, res));
