@@ -1,4 +1,5 @@
 require('dotenv').load();
+require('newrelic');
 /**
  * Bootstrap
  *
