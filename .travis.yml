@@ -6,6 +6,7 @@ node_js:
 services: mongodb
 deploy:
   provider: heroku
+  strategy: git
   api_key:
     secure: OhDXzhmZGTBZdqgB0N4ihHpKixuvuNBP9Zd3PGW7tuXoGwqYDDhyOtpsTsgPV27VdblyKXbHwijxAJpZiZNaCRRRWHH5BFaImfVykqxBnKX3qrdepVm7MQ+hUweRdbxCnog0fTQs9ckUqrOJwyGd02TrUFaePslF4T0d3CZvw1M=
   app: hidden-depths-2780
