@@ -49,7 +49,7 @@ function insertGameData(user, next, err, data) {
 function handleGame(user, game) {
   delete game.playtime_forever;
   delete game.has_community_visible_stats;
-  Game.findOrCreate(game, game).done(handleGameCreation);
+  Game.findOrCreate(game, game).exec(handleGameCreation);
   var user_ids = gamesHash.get(game.appid) || [];
   if (user_ids.indexOf(user) == -1) {
     user_ids.push(user);
@@ -174,4 +174,3 @@ SteamService.getGame = function(game_id, callback) {
 };
 
 module.exports = SteamService;
-
