@@ -1,3 +1,15 @@
+########################
+# sails
+########################
+.sails
+.waterline
+.rigging
+.tmp
+
+
+########################
+# node.js / npm
+########################
 lib-cov
 *.seed
 *.log
@@ -11,5 +23,30 @@ pids
 logs
 results
 
+
 npm-debug.log
+
+
+########################
+# misc / editors
+########################
+*~
+*#
+.DS_STORE
+.netbeans
+nbproject
+.idea
+*.swp
+
+########################
+# local config
+########################
+config/local.js
+.env
+assets/linker/bower_components
+assets/bower_components
+node_modules/sails-mongo/node_modules/mongodb/node_modules/kerberos/build
+node_modules/sails/node_modules/socket.io/node_modules/socket.io-client/node_modules/ws/build
+node_modules/sails/node_modules/connect-mongo/node_modules/mongodb/node_modules/bson/build
+node_modules/sails-mongo/node_modules/mongodb/node_modules/bson/build
 node_modules

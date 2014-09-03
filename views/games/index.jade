@@ -1,0 +1,22 @@
+extend ../layout
+
+block body
+  h1 Find shared games
+  p
+    |Input all users delimited with comma, e.g. "Th0ra, deiga, ..."
+    br
+    |A qualified user identifier is the steam ID or profile vanity URL, examples on how to get them:
+    br
+    |'http://steamcommunity.com/id/<strong>deiga</strong>'
+    br
+    |'http://steamcommunity.com/profiles/<strong>76561197995703445</strong>'
+    br
+    form.pure-form(action="/games/common/" method="get")
+      input(type='text', name='users')
+      input.pure-button.pure-button-primary(type='submit', value='Search')
+  p
+    |Input steam group name
+    br
+    form.pure-form(action="/games/group/" method="get")
+      input(type='text', name='group_name')
+      input.pure-button.pure-button-primary(type='submit', value='Search')
