@@ -1,1 +1,1 @@
-web: npm start -- --prod --no-grunt
+web: npm start
