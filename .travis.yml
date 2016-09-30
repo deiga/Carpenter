@@ -14,3 +14,4 @@ deploy:
   on:
     repo: deiga/Carpenter
     branch: dev
+    node: node
