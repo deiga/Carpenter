@@ -28,6 +28,6 @@ module.exports.connections = {
 
   mongo: {
     adapter: 'sails-mongo',
-    url: process.env.MONGOSOUP_URL
+    url: process.env.MONGODB_URI
   }
 };

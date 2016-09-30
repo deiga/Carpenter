@@ -1,2 +1,1 @@
-web: npm start
-mongo: mongod --config /usr/local/etc/mongod.conf
+web: npm start -- --prod --no-grunt
