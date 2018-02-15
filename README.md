@@ -1,5 +1,7 @@
 Carpenter
 =========
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/deiga/Carpenter.svg)](https://greenkeeper.io/)
 [![Build Status](https://travis-ci.org/deiga/Carpenter.png?branch=dev)](https://travis-ci.org/deiga/Carpenter) [![Dependency Status](https://david-dm.org/deiga/Carpenter.png)](https://david-dm.org/deiga/Carpenter)
 
 Repo for [NodeJS project](https://github.com/tuhoojabotti/NodeJS-ohjelmointiprojekti-k2014) at [University of Helsinki](https://www.cs.helsinki.fi/)
