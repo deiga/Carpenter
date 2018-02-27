@@ -6,7 +6,7 @@
   "dependencies": {
     "after": "~0.8",
     "bower": "^1.2.8",
-    "dotenv": "~4.0.0",
+    "dotenv": "~5.0.1",
     "grunt": "~1.0",
     "grunt-bower": "^0.21.2",
     "hashmap": "~2.0.6",
