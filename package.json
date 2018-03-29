@@ -19,9 +19,9 @@
     "pug": "^2.0.2",
     "rc": "~1.2.6",
     "restler": "^3.2.0",
-    "sails": "~0.12",
+    "sails": "~1.0.0",
     "sails-disk": "~0.10",
-    "sails-mongo": "~0.12",
+    "sails-mongo": "~1.0.0",
     "xml2js": "~0.4"
   },
   "engines": {
