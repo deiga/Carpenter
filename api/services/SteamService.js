@@ -54,7 +54,6 @@ async function handleGame(user, game) {
   delete game.has_community_visible_stats;
   try {
     await Game.findOrCreate({ appid: '' + game.appid }, game);
-    console.log('2');
   } catch (err) {
     switch (err.name) {
       case 'UsageError':
