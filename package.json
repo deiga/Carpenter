@@ -23,7 +23,8 @@
     "sails-hook-orm": "^2.0.0",
     "sails-hook-sockets": "^1.5.2",
     "sails-mongo": "~1.0",
-    "xml2js": "~0.4"
+    "xml2js": "~0.4",
+    "snyk": "^1.71.0"
   },
   "engines": {
     "node": "6.x"
@@ -31,7 +32,9 @@
   "scripts": {
     "start": "sails lift",
     "lint": "eslint . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look so good.' && htmlhint -c ./.htmlhintrc views/*.ejs && htmlhint -c ./.htmlhintrc views/**/*.ejs && htmlhint -c ./.htmlhintrc views/**/**/*.ejs && htmlhint -c ./.htmlhintrc views/**/**/**/*.ejs && htmlhint -c ./.htmlhintrc views/**/**/**/**/*.ejs && htmlhint -c ./.htmlhintrc views/**/**/**/**/**/*.ejs && htmlhint -c ./.htmlhintrc views/**/**/**/**/**/**/*.ejs && echo '✔  So do your .ejs files.' && lesshint assets/styles/ --max-warnings=0 && echo '✔  Your .less files look good, too.'",
-    "test": "npm run lint && npm run custom-tests && echo 'Done.'"
+    "test": "npm run lint && npm run custom-tests && echo 'Done.'",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "main": "app.js",
   "repository": {
@@ -52,5 +55,6 @@
     "htmlhint": "^0.9.13",
     "lesshint": "^5.0.1",
     "sails-hook-autoreload": "^1.1.0"
-  }
+  },
+  "snyk": true
 }
