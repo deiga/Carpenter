@@ -9,7 +9,7 @@ GamesController.common = function (req, res) {
   } else {
     user_ids = req.params.ids.split(',');
   }
-  user_ids = user_ids.filter(function(str) { return str !== '' && str !== null && typeof str !== 'undefined'; });
+  user_ids = user_ids.filter(function(str) { return !!str });
   getCommonGames(user_ids.length, res, null, user_ids);
 };
 
