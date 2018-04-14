@@ -10,11 +10,18 @@ var UsersController = {};
 
 UsersController.callback = function(req, res) {
   var user_id = req.query['openid.identity'].split('/').slice(-1)[0];
-  SteamService.player(user_id, function(err, user_name) {
+  SteamService.player(user_id, function(err, player) {
     if (err) {
       res.view('500', {errors: err});
     } else {
-      User.findOrCreate({steam_id: user_id}, {steam_id: user_id, steam_nick: user_name}, function(error, user) {
+      User.findOrCreate({ steam_id: user_id }, Object.assign({}, player, { steam_id: user_id }), function(error, user, wasCreated) {
+        if (! wasCreated) {
+          User.update(user, player).exec((err, updatedUser) => {
+            if (err) {
+              console.log('An error occurred when updating user', err);
+            }
+          });
+        }
         req.session.user = user.steam_id;
         res.redirect('/users/' + user_id);
       });

@@ -1,7 +1,11 @@
 extend ../layout
 
 block body
-  h1 !{user.steam_nick}
+  h1
+    a(href=user.profileurl)
+      = user.personaname
+    | &nbsp;
+    img(src=user.avatar)
 
 
   if games instanceof Array && games.length > 0

@@ -80,7 +80,7 @@ SteamService.player = function(user_id, callback) {
   callback = callback || noop;
   getPlayerSummary(user_id, function(err, result, res) {
     if (result.response.players.length > 0) {
-      callback(null, result.response.players[0].personaname);
+      callback(null, result.response.players[0]);
     } else {
       callback('Could not find player: ' + user_id, null);
     }

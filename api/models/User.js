@@ -11,7 +11,7 @@
    schema: true,
 
    attributes: {
-    steam_nick: {
+     personaname: {
       type: 'STRING',
       required: true,
       unique: true
@@ -20,6 +20,15 @@
       type: 'STRING',
       required: true,
       unique: true
+    },
+    avatar: {
+      type: 'STRING'
+    },
+    avatarmedium: {
+      type: 'STRING'
+    },
+    profileurl: {
+      type: 'STRING'
     },
     friends: {
       type: 'ARRAY'
