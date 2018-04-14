@@ -52,19 +52,25 @@ function insertGameData(user, next, err, data) {
 async function handleGame(user, game) {
   delete game.playtime_forever;
   delete game.has_community_visible_stats;
-  let newOrExistingGame;
   try {
-    newOrExistingGame = await Game.findOrCreate({ appid: game.appid.toString() }, game);
+    await Game.findOrCreate({ appid: '' + game.appid }, game);
+    console.log('2');
   } catch (err) {
     switch (err.name) {
-      default: console.error('Error while saving game: ', newOrExistingGame, err);
+      case 'UsageError':
+        console.error('There are errors in input data', game, err);
+        break;
+      case 'AdapterError':
+        console.error('There is something wrong with MongoDB', err);
+        break;
+      default: console.error('Error while saving game: ', game, err);
     }
   }
-  var userIds = gamesHash.get(newOrExistingGame.appid) || [];
+  var userIds = gamesHash.get(game.appid) || [];
   if (userIds.indexOf(user) === -1) {
     userIds.push(user);
   }
-  gamesHash.set(newOrExistingGame.appid, userIds);
+  gamesHash.set(game.appid, userIds);
 }
 
 SteamService.games = function(steamId, callback) {
