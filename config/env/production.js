@@ -221,7 +221,7 @@ module.exports = {
     *                                                                          *
     ***************************************************************************/
     cookie: {
-      // secure: true,
+      secure: true,
       maxAge: 24 * 60 * 60 * 1000,  // 24 hours
     },
 
@@ -279,7 +279,7 @@ module.exports = {
     // sails_sockets__url=redis://admin:myc00lpAssw2D@bigsquid.redistogo.com:9562/
     // ```
     //--------------------------------------------------------------------------
-
+    beforeConnect: false
   },
 
 
@@ -371,7 +371,7 @@ module.exports = {
   *                                                                         *
   ***************************************************************************/
   custom: {
-    baseUrl: 'https://example.com',
+    baseUrl: 'http://hidden-depths-2780.herokuapp.com/',
     internalEmailAddress: 'support@example.com',
 
     // mailgunDomain: 'mg.example.com',
