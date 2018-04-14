@@ -6,11 +6,11 @@ var GamesController = {};
 GamesController.common = function (req, res) {
   var user_ids = [];
   if (typeof req.params.ids === 'undefined') {
-    user_ids = req.query.users.split(',').map(function(id) { return id.trim(); });
+    user_ids = req.query.users.split(',').map((id) => { return id.trim(); });
   } else {
     user_ids = req.params.ids.split(',');
   }
-  user_ids = user_ids.filter(function(str) { return !!str });
+  user_ids = user_ids.filter((str) => { return !!str; });
   getCommonGames(user_ids.length, res, null, user_ids);
 };
 
@@ -69,14 +69,12 @@ function finish(res, err, games) {
     return 0;
   });
   res.view('games/common', { games: games, names: names } );
-  console.log('All done!');
 }
 
 function error(res, err) {
   console.error("ERROR:", err);
   res.req.flash('error', err.toString());
   res.redirect('/');
-  console.log('All done!');
 }
 
 

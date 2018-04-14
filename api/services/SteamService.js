@@ -8,6 +8,8 @@ require('dotenv').load();
 var client = require('./SteamRestAPI').configure(process.env.STEAM_API_KEY);
 var domain = require('domain');
 
+const SteamService = {};
+
 function noop(err, result) {
   console.log('NOOP');
   console.error(err);
@@ -47,26 +49,23 @@ function insertGameData(user, next, err, data) {
   next(err);
 }
 
-function handleGame(user, game) {
+async function handleGame(user, game) {
   delete game.playtime_forever;
   delete game.has_community_visible_stats;
-  Game.findOrCreate({ appid: game.appid.toString() }, game).exec(handleGameCreation);
-  var user_ids = gamesHash.get(game.appid) || [];
-  if (user_ids.indexOf(user) == -1) {
+  let newOrExistingGame;
+  try {
+    newOrExistingGame = await Game.findOrCreate({ appid: game.appid.toString() }, game);
+  } catch (err) {
+    switch (err.name) {
+      default: console.error("Error while saving game: ", newOrExistingGame, err);
+    }
+  }
+  var user_ids = gamesHash.get(newOrExistingGame.appid) || [];
+  if (user_ids.indexOf(user) === -1) {
     user_ids.push(user);
   }
-  gamesHash.set(game.appid, user_ids);
+  gamesHash.set(newOrExistingGame.appid, user_ids);
 }
-
-function handleGameCreation(error, created_game) {
-  if (error) {
-    console.error("Error while saving game: ", created_game, error);
-  } else if (typeof created_game === 'undefined' && Game.adapter.identity !== 'sails-mongo') {
-    console.log("whats wrong with this game?", created_game);
-  }
-}
-
-var SteamService = {};
 
 SteamService.games = function(steam_id, callback) {
   callback = callback || noop;
@@ -80,19 +79,22 @@ SteamService.games = function(steam_id, callback) {
 SteamService.player = function(user_id, callback) {
   callback = callback || noop;
   getPlayerSummary(user_id, function(err, result, res) {
+    if (err) {
+      console.err('An error occured', err);
+    }
     if (result.response.players.length > 0) {
-      callback(null, result.response.players[0]);
+      return callback(null, result.response.players[0]);
     } else {
-      callback('Could not find player: ' + user_id, null);
+      return callback('Could not find player: ' + user_id, null);
     }
   });
 };
 
 function getGamesForResolvedVanityURL(steam_id, callback, result) {
   if (Object.getOwnPropertyNames(result).length === 0) {
-    callback('Error in request. id: "' + steam_id + '"', {});
-  } else if (result.response.success == 42) {
-    callback('Found no match for id: "' + steam_id + '"', {});
+    return callback('Error in request. id: "' + steam_id + '"', {});
+  } else if (result.response.success === 42) {
+    return callback('Found no match for id: "' + steam_id + '"', {});
   } else {
     getGames(result.response.steamid, callback);
   }
@@ -124,13 +126,13 @@ function getMemberList(url, retries_left, callback) {
         console.error("Error while parsing xml, retrying");
         setImmediate(getMemberList.bind(null, url, retries_left - 1, callback));
       } else {
-        callback(null, result.memberList.members[0].steamID64);
+        return callback(null, result.memberList.members[0].steamID64);
       }
     }));
   }
 
   d.on('error', function(err) {
-    console.error("Error while parsing xml, retrying");
+    console.error("Error while parsing xml, retrying", err);
     getMemberList.bind(null, url, retries_left - 1, callback);
   });
 

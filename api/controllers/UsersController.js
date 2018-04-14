@@ -3,21 +3,26 @@ var relyingPart = new openid.RelyingParty(
   process.env.STEAM_AUTH_CALLBACK + '/users/callback',
   null,
   true,
-  false,
-  []);
+  false, []);
 
 const SteamService = require('../services/SteamService');
 
 var UsersController = {};
 
-UsersController.callback = function(req, res) {
+UsersController.callback = function (req, res) {
   var user_id = req.query['openid.identity'].split('/').slice(-1)[0];
-  SteamService.player(user_id, function(err, player) {
+  SteamService.player(user_id, (err, player) => {
     if (err) {
-      res.view('500', {errors: err});
+      res.view('500', {
+        errors: err
+      });
     } else {
-      User.findOrCreate({ steam_id: user_id }, Object.assign({}, player, { steam_id: user_id }), function(error, user, wasCreated) {
-        if (! wasCreated) {
+      User.findOrCreate({
+        steam_id: user_id
+      }, Object.assign({}, player, {
+        steam_id: user_id
+      }), (error, user, wasCreated) => {
+        if (!wasCreated) {
           User.update(user, player).exec((err) => {
             if (err) {
               console.log('An error occurred when updating user', err);
@@ -36,14 +41,17 @@ UsersController.login = function (req, res) {
     res.redirect('/users/' + req.session.user);
     return;
   }
-  relyingPart.authenticate('http://steamcommunity.com/openid', false, function(error, authUrl) {
+  relyingPart.authenticate('http://steamcommunity.com/openid', false, (error, authUrl) => {
     if (error) {
-      if (req.session.user) req.session.user = null;
+      if (req.session.user) {
+        req.session.user = null;
+      }
       res.writeHead(200);
       res.end('Authentication failed: ' + error.message);
-    }
-    else {
-      res.writeHead(302, {location: authUrl });
+    } else {
+      res.writeHead(302, {
+        location: authUrl
+      });
       res.end();
     }
   });
@@ -52,29 +60,36 @@ UsersController.login = function (req, res) {
 
 UsersController.show = function (req, res) {
   var user_id = req.params.id;
-  User.findOne({ steam_id: user_id }, function(err, user) {
-   if (err) {
-    return res.send(err,500);
-  }
-  if (!user) {
-    return res.send(404);
-  }
-  SteamService.games(user_id, function (err, result) {
-    var games = result.response.games;
-    games.sort(function(a, b) {
-      if (a.name > b.name) {
-        return 1;
+  User.findOne({
+    steam_id: user_id
+  }, (err, user) => {
+    if (err) {
+      return res.send(err, 500);
+    }
+    if (!user) {
+      return res.send(404);
+    }
+    SteamService.games(user_id, (err, result) => {
+      if (err) {
+        return res.send(err, 500);
       }
-      if (a.name < b.name) {
-        return -1;
-      }
-      return 0;
+      var games = result.response.games;
+      games.sort((a, b) => {
+        if (a.name > b.name) {
+          return 1;
+        }
+        if (a.name < b.name) {
+          return -1;
+        }
+        return 0;
+      });
+      return res.view({
+        user: user,
+        games: games
+      });
     });
-    return res.view({user: user, games: games});
+
   });
-
-});
-
 };
 
 
