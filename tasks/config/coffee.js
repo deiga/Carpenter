@@ -1,24 +1,30 @@
 /**
- * `tasks/config/less`
+ * `tasks/config/coffee`
  *
  * ---------------------------------------------------------------
  *
- * Compile your LESS files into a CSS stylesheet.
+ * Compile CoffeeScript files located in `assets/js` into Javascript
+ * and generate new `.js` files in `.tmp/public/js`.
  *
  * For more information, see:
- *   https://sailsjs.com/anatomy/tasks/config/less.js
+ *   https://sailsjs.com/anatomy/tasks/config/coffee.js
  *
  */
 module.exports = function(grunt) {
 
-  grunt.config.set('less', {
+  grunt.config.set('coffee', {
     dev: {
+      options: {
+        bare: true,
+        sourceMap: true,
+        sourceRoot: './'
+      },
       files: [{
         expand: true,
-        cwd: 'assets/styles/',
-        src: ['importer.less'],
-        dest: '.tmp/public/styles/',
-        ext: '.css'
+        cwd: 'assets/js/',
+        src: ['**/*.coffee'],
+        dest: '.tmp/public/js/',
+        ext: '.js'
       }]
     }
   });
@@ -35,7 +41,7 @@ module.exports = function(grunt) {
   //
   // 1. Install it as a local dependency of your Sails app:
   //    ```
-  //    $ npm install grunt-contrib-less --save-dev --save-exact
+  //    $ npm install grunt-contrib-coffee --save-dev --save-exact
   //    ```
   //
   //
@@ -43,7 +49,7 @@ module.exports = function(grunt) {
   //
   // ```
   // // Load Grunt plugin from the node_modules/ folder.
-  // grunt.loadNpmTasks('grunt-contrib-less');
+  // grunt.loadNpmTasks('grunt-contrib-coffee');
   // ```
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
