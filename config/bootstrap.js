@@ -1,5 +1,4 @@
 require('dotenv').load();
-const async = require('async');
 /**
  * Bootstrap
  * (sails.config.bootstrap)
