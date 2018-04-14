@@ -6,11 +6,11 @@ var Steam = rest.service(function(apikey) {
   baseURL: 'https://api.steampowered.com'
 });
 
-Steam.prototype.resolveVanityURL = function(vanity_url) {
+Steam.prototype.resolveVanityURL = function(vanityUrl) {
   var opts = {
     query: {
       key: this.apikey,
-      vanityurl: vanity_url
+      vanityurl: vanityUrl
     },
     headers: {
       'Content-Type': 'application/json'
@@ -19,11 +19,11 @@ Steam.prototype.resolveVanityURL = function(vanity_url) {
   return this.get('/ISteamUser/ResolveVanityURL/v0001/', opts );
 };
 
-Steam.prototype.playerSummary = function(user_id) {
+Steam.prototype.playerSummary = function(userId) {
   var opts = {
     query: {
       key: this.apikey,
-      steamids: user_id
+      steamids: userId
     },
     headers: {
       'Content-Type': 'application/json'
@@ -32,12 +32,12 @@ Steam.prototype.playerSummary = function(user_id) {
   return this.get('/ISteamUser/GetPlayerSummaries/v0002/', opts);
 };
 
-Steam.prototype.games = function(steam_id) {
+Steam.prototype.games = function(steamId) {
   var opts = {
     query: {
       key: this.apikey,
-      steamid: steam_id,
-      include_appinfo: 1
+      steamid: steamId,
+      include_appinfo: 1 // eslint-disable-line camelcase
     },
     headers: {
       'Content-Type': 'application/json'
@@ -46,11 +46,11 @@ Steam.prototype.games = function(steam_id) {
   return this.get('/IPlayerService/GetOwnedGames/v0001/', opts );
 };
 
-Steam.prototype.gameInfo = function(game_id) {
+Steam.prototype.gameInfo = function(gameId) {
   var opts = {
     query: {
       key: this.apikey,
-      appid: game_id,
+      appid: gameId,
     },
     headers: {
       'Content-Type': 'application/json'

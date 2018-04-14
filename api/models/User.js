@@ -31,7 +31,7 @@ module.exports = {
       required: true,
       unique: true
     },
-    steam_id: {
+    steamid: {
       type: 'STRING',
       required: true,
       unique: true

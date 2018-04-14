@@ -8,8 +8,7 @@
 module.exports = {
 
   schema: true,
-
-	attributes: {
+  attributes: {
     createdAt: { type: 'number', autoCreatedAt: true, },
     updatedAt: { type: 'number', autoUpdatedAt: true, },
 
@@ -24,8 +23,8 @@ module.exports = {
       type: 'STRING',
       required: true
     },
-    img_icon_url: 'STRING',
-    img_logo_url: 'STRING'
-	}
+    img_icon_url: 'STRING', // eslint-disable-line camelcase
+    img_logo_url: 'STRING' // eslint-disable-line camelcase
+  }
 
 };

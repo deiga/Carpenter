@@ -10,29 +10,26 @@ const SteamService = require('../services/SteamService');
 var UsersController = {};
 
 UsersController.callback = function (req, res) {
-  var user_id = req.query['openid.identity'].split('/').slice(-1)[0];
-  SteamService.player(user_id, (err, player) => {
+  var userId = req.query['openid.identity'].split('/').slice(-1)[0];
+  SteamService.player(userId, (err, player) => {
     if (err) {
-      res.view('500', {
+      return res.view('500', {
         errors: err
       });
-    } else {
-      User.findOrCreate({
-        steam_id: user_id
-      }, Object.assign({}, player, {
-        steam_id: user_id
-      }), (error, user, wasCreated) => {
-        if (!wasCreated) {
-          User.update(user, player).exec((err) => {
-            if (err) {
-              console.log('An error occurred when updating user', err);
-            }
-          });
-        }
-        req.session.user = user.steam_id;
-        res.redirect('/users/' + user_id);
-      });
     }
+    User.findOrCreate({ steamid: userId }, player)
+      .then(async (user, wasCreated) => {
+        if (!wasCreated) {
+          await User.update(user, player);
+        }
+        req.session.user = user.steamid;
+        res.redirect('/users/' + userId);
+      })
+      .catch((err) => {
+        if (err) {
+          res.view('500', { errors: err });
+        }
+      });
   });
 };
 
@@ -58,37 +55,39 @@ UsersController.login = function (req, res) {
 };
 
 
-UsersController.show = function (req, res) {
-  var user_id = req.params.id;
-  User.findOne({
-    steam_id: user_id
-  }, (err, user) => {
+UsersController.show = async function (req, res) {
+  var userId = req.params.id;
+  let user;
+  try {
+    user = await User.findOne({ steamid: userId });
+  } catch (err) {
     if (err) {
       return res.send(err, 500);
     }
-    if (!user) {
-      return res.send(404);
-    }
-    SteamService.games(user_id, (err, result) => {
-      if (err) {
-        return res.send(err, 500);
-      }
-      var games = result.response.games;
-      games.sort((a, b) => {
-        if (a.name > b.name) {
-          return 1;
-        }
-        if (a.name < b.name) {
-          return -1;
-        }
-        return 0;
-      });
-      return res.view({
-        user: user,
-        games: games
-      });
-    });
+  }
 
+  if (!user) {
+    return res.send(404);
+  }
+
+  SteamService.games(userId, (err, result) => {
+    if (err) {
+      return res.send(err, 500);
+    }
+    var games = result.response.games;
+    games.sort((a, b) => {
+      if (a.name > b.name) {
+        return 1;
+      }
+      if (a.name < b.name) {
+        return -1;
+      }
+      return 0;
+    });
+    return res.view({
+      user: user,
+      games: games
+    });
   });
 };
 
