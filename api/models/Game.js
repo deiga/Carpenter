@@ -9,11 +9,6 @@ module.exports = {
 
   schema: true,
   attributes: {
-    createdAt: { type: 'number', autoCreatedAt: true, },
-    updatedAt: { type: 'number', autoUpdatedAt: true, },
-
-    id: { type: 'string', columnName: '_id' },
-
     appid: {
       type: 'STRING',
       required: true,
