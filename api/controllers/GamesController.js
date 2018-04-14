@@ -31,11 +31,12 @@ function getCommonGames(limit, res, err, user_ids) {
   SteamService.getCommonGames(user_ids, limit, listGames.bind(null, res));
 }
 
-function listGames(res, err, games) {
-  if (Array.isArray(games)) {
-    const game_ids = games;
+function listGames(res, err, game_entries) {
+  let game_ids = [];
+  if (Array.isArray(game_entries)) {
+    game_ids = game_entries;
   } else {
-    const game_ids = Object.keys(game_ids);
+    game_ids = Object.keys(game_ids);
   }
   if (err) {
     return error(res, err);

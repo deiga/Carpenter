@@ -16,7 +16,7 @@ UsersController.callback = function(req, res) {
     } else {
       User.findOrCreate({ steam_id: user_id }, Object.assign({}, player, { steam_id: user_id }), function(error, user, wasCreated) {
         if (! wasCreated) {
-          User.update(user, player).exec((err, updatedUser) => {
+          User.update(user, player).exec((err) => {
             if (err) {
               console.log('An error occurred when updating user', err);
             }

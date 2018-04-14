@@ -9,6 +9,7 @@ var client = require('./SteamRestAPI').configure(process.env.STEAM_API_KEY);
 var domain = require('domain');
 
 function noop(err, result) {
+  console.log('NOOP');
   console.error(err);
   console.log(result);
 }
