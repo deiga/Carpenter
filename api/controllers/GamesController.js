@@ -1,4 +1,5 @@
 var after = require('after');
+const SteamService = require('../services/SteamService');
 
 var GamesController = {};
 

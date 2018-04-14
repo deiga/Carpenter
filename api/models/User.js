@@ -6,12 +6,27 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
- module.exports = {
+module.exports = {
 
-   schema: true,
+  schema: true,
 
-   attributes: {
-     personaname: {
+  attributes: {
+
+    createdAt: {
+      type: 'number',
+      autoCreatedAt: true,
+    },
+    updatedAt: {
+      type: 'number',
+      autoUpdatedAt: true,
+    },
+
+    id: {
+      type: 'string',
+      columnName: '_id'
+    },
+
+    personaname: {
       type: 'STRING',
       required: true,
       unique: true
@@ -31,17 +46,13 @@
       type: 'STRING'
     },
     friends: {
-      type: 'ARRAY'
+      type: 'json',
+      columnType: 'array'
     },
     games: {
-     type: 'ARRAY'
-   },
-
-   toJSON: function() {
-      var obj = this.toObject();
-      delete obj.password;
-      return obj;
+      type: 'json',
+      columnType: 'array'
     }
- }
+  }
 
 };

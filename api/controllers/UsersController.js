@@ -6,6 +6,8 @@ var relyingPart = new openid.RelyingParty(
   false,
   []);
 
+const SteamService = require('../services/SteamService');
+
 var UsersController = {};
 
 UsersController.callback = function(req, res) {
