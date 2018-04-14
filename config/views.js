@@ -25,9 +25,13 @@ module.exports.views = {
   // For more options, check out the docs:
   // https://github.com/balderdashy/sails-wiki/blob/0.9/config.views.md#engine
 
-  engine: 'pug',
-
-
+  extension: 'pug',
+  getRenderFn: function() {
+    // Import `consolidate`.
+    const cons = require('consolidate');
+    // Return the rendering function for Pug.
+    return cons.pug;
+  },
 
   // Layouts are simply top-level HTML templates you can use as wrappers 
   // for your server-side views.  If you're using ejs or jade, you can take advantage of
