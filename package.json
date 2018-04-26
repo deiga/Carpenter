@@ -27,7 +27,7 @@
     "snyk": "^1.71.0"
   },
   "engines": {
-    "node": "8.x"
+    "node": "10"
   },
   "scripts": {
     "start": "sails lift",
