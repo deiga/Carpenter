@@ -1,0 +1,32 @@
+doctype
+html
+  head
+    title= "Carpenter"
+    meta(name="viewport",content="width=device-width, initial-scale=1, maximum-scale=1")
+    // SCRIPTS
+    script(src="/dependencies/sails.io.js")
+    script(src="/js/carpenter.js")
+    // SCRIPTS END
+    // STYLES
+    link(rel="stylesheet", href="/styles/importer.css")
+    link(rel="stylesheet", href="//cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css")
+    link(rel="stylesheet", href="//cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/pure-min.css")
+    // STYLES END
+  body
+    header
+      include partials/_navigation
+    section#contents
+      - var error = req.flash('error')
+      if error.length > 0
+        .error
+          = error
+      block body
+    footer
+      |Made by: &nbsp;
+      a(href="https://github.com/salunn") Taxus
+      |, &nbsp;
+      a(href="https://github.com/JoonasMagnusson") Th0ra
+      |, &nbsp;
+      a(href="https://github.com/deiga") deiga
+      br
+      img(src='/images/nodejs.jpeg')

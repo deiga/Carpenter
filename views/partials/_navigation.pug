@@ -1,0 +1,12 @@
+nav#navigation.pure-menu.pure-menu-open.pure-menu-horizontal.pure-menu-fixed
+  ul.pure-menu-list
+    li.pure-menu-item
+      a(href="/").pure-menu-link Home
+    li.pure-menu-item
+      a(href="/about").pure-menu-link About
+    li.pure-menu-item
+      if req.session.user
+        a(href=`/users/${req.session.user}`).pure-menu-link User
+      else
+        a(href="/users/login").pure-menu-link
+          img(src="http://cdn.steamcommunity.com/public/images/signinthroughsteam/sits_large_border.png")

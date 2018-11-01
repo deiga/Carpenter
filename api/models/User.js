@@ -6,33 +6,38 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
- module.exports = {
+module.exports = {
 
-   schema: true,
+  schema: true,
 
-   attributes: {
-    steam_nick: {
+  attributes: {
+    personaname: {
       type: 'STRING',
       required: true,
       unique: true
     },
-    steam_id: {
+    steamid: {
       type: 'STRING',
       required: true,
       unique: true
+    },
+    avatar: {
+      type: 'STRING'
+    },
+    avatarmedium: {
+      type: 'STRING'
+    },
+    profileurl: {
+      type: 'STRING'
     },
     friends: {
-      type: 'ARRAY'
+      type: 'json',
+      columnType: 'array'
     },
     games: {
-     type: 'ARRAY'
-   },
-
-   toJSON: function() {
-      var obj = this.toObject();
-      delete obj.password;
-      return obj;
+      type: 'json',
+      columnType: 'array'
     }
- }
+  }
 
 };

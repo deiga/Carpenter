@@ -1,24 +1,35 @@
 var openid = require('openid');
 var relyingPart = new openid.RelyingParty(
   process.env.STEAM_AUTH_CALLBACK + '/users/callback',
-  '/',
+  null,
   true,
-  false,
-  []);
+  false, []);
+
+const SteamService = require('../services/SteamService');
 
 var UsersController = {};
 
-UsersController.callback = function(req, res) {
-  var user_id = req.query['openid.identity'].split('/').slice(-1)[0];
-  SteamService.player(user_id, function(err, user_name) {
+UsersController.callback = function (req, res) {
+  var userId = req.query['openid.identity'].split('/').slice(-1)[0];
+  SteamService.player(userId, (err, player) => {
     if (err) {
-      res.view('500', {errors: err});
-    } else {
-      User.findOrCreate({steam_id: user_id}, {steam_id: user_id, steam_nick: user_name}, function(error, user) {
-        req.session.user = user.steam_id;
-        res.redirect('/users/' + user_id);
+      return res.view('500', {
+        errors: err
       });
     }
+    User.findOrCreate({ steamid: userId }, player)
+      .then(async (user, wasCreated) => {
+        if (!wasCreated) {
+          await User.update(user, player);
+        }
+        req.session.user = user.steamid;
+        res.redirect('/users/' + userId);
+      })
+      .catch((err) => {
+        if (err) {
+          res.view('500', { errors: err });
+        }
+      });
   });
 };
 
@@ -27,32 +38,44 @@ UsersController.login = function (req, res) {
     res.redirect('/users/' + req.session.user);
     return;
   }
-  relyingPart.authenticate('http://steamcommunity.com/openid', false, function(error, authUrl) {
+  relyingPart.authenticate('http://steamcommunity.com/openid', false, (error, authUrl) => {
     if (error) {
-      if (req.session.user) req.session.user = null;
+      if (req.session.user) {
+        req.session.user = null;
+      }
       res.writeHead(200);
       res.end('Authentication failed: ' + error.message);
-    }
-    else {
-      res.writeHead(302, {location: authUrl });
+    } else {
+      res.writeHead(302, {
+        location: authUrl
+      });
       res.end();
     }
   });
 };
 
 
-UsersController.show = function (req, res) {
-  var user_id = req.params.id;
-  User.findOne({ steam_id: user_id }, function(err, user) {
-   if (err) {
-    return res.send(err,500);
+UsersController.show = async function (req, res) {
+  var userId = req.params.id;
+  let user;
+  try {
+    user = await User.findOne({ steamid: userId });
+  } catch (err) {
+    if (err) {
+      return res.send(err, 500);
+    }
   }
+
   if (!user) {
     return res.send(404);
   }
-  SteamService.games(user_id, function (err, result) {
+
+  SteamService.games(userId, (err, result) => {
+    if (err) {
+      return res.send(err, 500);
+    }
     var games = result.response.games;
-    games.sort(function(a, b) {
+    games.sort((a, b) => {
       if (a.name > b.name) {
         return 1;
       }
@@ -61,11 +84,11 @@ UsersController.show = function (req, res) {
       }
       return 0;
     });
-    return res.view({user: user, games: games});
+    return res.view({
+      user: user,
+      games: games
+    });
   });
-
-});
-
 };
 
 
