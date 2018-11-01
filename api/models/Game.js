@@ -8,7 +8,8 @@
 module.exports = {
 
   schema: true,
-  attributes: {
+
+	attributes: {
     appid: {
       type: 'STRING',
       required: true,
@@ -18,8 +19,8 @@ module.exports = {
       type: 'STRING',
       required: true
     },
-    img_icon_url: 'STRING', // eslint-disable-line camelcase
-    img_logo_url: 'STRING' // eslint-disable-line camelcase
-  }
+    img_icon_url: 'STRING',
+    img_logo_url: 'STRING'
+	}
 
 };
