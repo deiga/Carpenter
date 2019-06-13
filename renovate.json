@@ -5,6 +5,5 @@
     ":masterIssue",
     "group:linters",
     "group:allNonMajor"
-  ],
-  "lockFileMaintenance": { "enabled": false },
+  ]
 }
