@@ -24,7 +24,7 @@
     "sails-hook-sockets": "2.0.0",
     "sails-mongo": "1.0.1",
     "xml2js": "0.4.19",
-    "snyk": "1.195.0"
+    "snyk": "1.195.1"
   },
   "engines": {
     "node": "8.x"
@@ -50,7 +50,7 @@
   "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-preset-es2015": "6.24.1",
-    "eslint": "6.0.1",
+    "eslint": "6.1.0",
     "grunt": "1.0.4",
     "htmlhint": "0.11.0",
     "lesshint": "6.3.7",
