@@ -9,7 +9,7 @@
     "consolidate": "0.16.0",
     "dotenv": "8.2.0",
     "hashmap": "2.4.0",
-    "less": "3.13.1",
+    "less": "4.0.0",
     "long": "4.0.0",
     "newrelic": "7.0.2",
     "openid": "2.0.7",
