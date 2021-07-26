@@ -17,7 +17,7 @@
     "restler": "3.4.0",
     "sails": "1.4.3",
     "sails-disk": "2.1.0",
-    "sails-hook-apianalytics": "2.0.4",
+    "sails-hook-apianalytics": "2.0.5",
     "sails-hook-grunt": "4.0.1",
     "sails-hook-organics": "2.2.0",
     "sails-hook-orm": "3.0.2",
