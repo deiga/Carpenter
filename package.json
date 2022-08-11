@@ -21,7 +21,7 @@
     "sails-hook-grunt": "5.0.0",
     "sails-hook-organics": "2.2.0",
     "sails-hook-orm": "4.0.1",
-    "sails-hook-sockets": "2.0.1",
+    "sails-hook-sockets": "2.0.3",
     "sails-mongo": "2.0.0",
     "xml2js": "0.4.23"
   },
