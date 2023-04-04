@@ -11,7 +11,7 @@
     "hashmap": "2.4.0",
     "less": "4.1.3",
     "long": "4.0.0",
-    "newrelic": "9.14.1",
+    "newrelic": "<7",
     "openid": "2.0.10",
     "pug": "3.0.2",
     "restler": "3.4.0",
@@ -28,7 +28,9 @@
   "scripts": {
     "start": "sails lift",
     "lint": "eslint . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look so good.' && htmlhint -c ./.htmlhintrc views/*.ejs && htmlhint -c ./.htmlhintrc views/**/*.ejs && htmlhint -c ./.htmlhintrc views/**/**/*.ejs && htmlhint -c ./.htmlhintrc views/**/**/**/*.ejs && htmlhint -c ./.htmlhintrc views/**/**/**/**/*.ejs && htmlhint -c ./.htmlhintrc views/**/**/**/**/**/*.ejs && htmlhint -c ./.htmlhintrc views/**/**/**/**/**/**/*.ejs && echo '✔  So do your .ejs files.' && lesshint assets/styles/ --max-warnings=0 && echo '✔  Your .less files look good, too.'",
-    "test": "npm run lint && npm run custom-tests && echo 'Done.'",
+    "pretest": "npm run lint",
+    "test": "npm run custom-tests",
+    "posttest": "echo 'Done.'",
     "custom-tests": "echo \"(No other custom tests yet.)\" && echo"
   },
   "main": "app.js",
@@ -45,7 +47,7 @@
   "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-preset-es2015": "6.24.1",
-    "eslint": "8.37.0",
+    "eslint": "<7",
     "grunt": "1.6.1",
     "htmlhint": "1.1.4",
     "lesshint": "6.3.7",
