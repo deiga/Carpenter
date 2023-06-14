@@ -47,7 +47,7 @@
   "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-preset-es2015": "6.24.1",
-    "eslint": "<7",
+    "eslint": "<9",
     "grunt": "1.6.1",
     "htmlhint": "1.1.4",
     "lesshint": "6.3.7",
