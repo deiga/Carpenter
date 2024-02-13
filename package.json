@@ -6,7 +6,7 @@
   "dependencies": {
     "after": "0.8.2",
     "connect-flash": "0.1.1",
-    "consolidate": "0.16.0",
+    "consolidate": "1.0.3",
     "dotenv": "16.4.3",
     "hashmap": "2.4.0",
     "less": "4.2.0",
