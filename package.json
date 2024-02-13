@@ -15,7 +15,7 @@
     "openid": "2.0.11",
     "pug": "3.0.2",
     "restler": "3.4.0",
-    "sails": "1.5.4",
+    "sails": "1.5.7",
     "sails-disk": "2.1.2",
     "sails-hook-apianalytics": "2.0.5",
     "sails-hook-grunt": "5.0.0",
