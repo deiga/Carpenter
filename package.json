@@ -19,7 +19,7 @@
     "sails-disk": "2.1.2",
     "sails-hook-apianalytics": "2.0.6",
     "sails-hook-grunt": "5.0.0",
-    "sails-hook-organics": "2.2.3",
+    "sails-hook-organics": "3.0.1",
     "sails-hook-orm": "4.0.3",
     "sails-hook-sockets": "2.0.4",
     "sails-mongo": "2.1.2",
